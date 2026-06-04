@@ -111,6 +111,7 @@ const App = {
     async boot() {
         initTheme();
         initSearchForm();
+        initMobileMenu();
         try {
             const resp = await fetch('./psalter.json');
             if (!resp.ok) throw new Error('HTTP ' + resp.status);
@@ -784,6 +785,99 @@ function highlightMatches(text, q) {
     }
     result += escapeHtml(text.slice(last));
     return result;
+}
+
+function initMobileMenu() {
+    const toggle   = document.getElementById('menu-toggle');
+    const menu     = document.getElementById('site-menu');
+    const backdrop = document.querySelector('.menu-backdrop');
+    if (!toggle || !menu || !backdrop) return;
+
+    let lastFocus = null;
+
+    function open() {
+        if (menu.dataset.open === 'true') return;
+        lastFocus = document.activeElement;
+        menu.dataset.open = 'true';
+        backdrop.hidden = false;
+        // Force layout so the transition runs.
+        // eslint-disable-next-line no-unused-expressions
+        backdrop.offsetWidth;
+        backdrop.dataset.open = 'true';
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Close menu');
+        document.body.dataset.menuOpen = 'true';
+        // Move focus to the first link inside the drawer.
+        const firstLink = menu.querySelector('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (firstLink) firstLink.focus({ preventScroll: true });
+    }
+
+    function close() {
+        if (menu.dataset.open !== 'true') return;
+        menu.dataset.open = 'false';
+        backdrop.dataset.open = 'false';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open menu');
+        delete document.body.dataset.menuOpen;
+        // Hide backdrop after the fade-out completes.
+        const onEnd = () => {
+            if (menu.dataset.open !== 'true') backdrop.hidden = true;
+            backdrop.removeEventListener('transitionend', onEnd);
+        };
+        backdrop.addEventListener('transitionend', onEnd);
+        // Fallback in case transitionend doesn't fire (reduced motion).
+        setTimeout(() => { if (menu.dataset.open !== 'true') backdrop.hidden = true; }, 300);
+        if (lastFocus && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true });
+    }
+
+    function toggleMenu() {
+        if (menu.dataset.open === 'true') close();
+        else open();
+    }
+
+    toggle.addEventListener('click', toggleMenu);
+    backdrop.addEventListener('click', close);
+
+    // Close when any link inside the drawer is followed.
+    menu.addEventListener('click', e => {
+        const a = e.target.closest('a');
+        if (a) close();
+    });
+
+    // Close on hash change (covers programmatic navigation too).
+    window.addEventListener('hashchange', () => close());
+
+    // Esc closes the drawer; focus trap with Tab.
+    document.addEventListener('keydown', e => {
+        if (menu.dataset.open !== 'true') return;
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            close();
+            return;
+        }
+        if (e.key === 'Tab') {
+            const focusables = [
+                toggle,
+                ...menu.querySelectorAll('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'),
+            ].filter(el => !el.disabled && el.offsetParent !== null);
+            if (!focusables.length) return;
+            const first = focusables[0];
+            const last  = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        }
+    });
+
+    // If the viewport grows past the breakpoint, force close.
+    const mq = window.matchMedia('(min-width: 601px)');
+    const onResize = () => { if (mq.matches) close(); };
+    if (mq.addEventListener) mq.addEventListener('change', onResize);
+    else mq.addListener(onResize);
 }
 
 function initSearchForm() {

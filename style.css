@@ -90,6 +90,35 @@ a:hover { text-decoration: underline; }
 
 .site-nav a:hover { color: var(--accent); }
 
+/* Hamburger toggle: hidden on desktop, shown at narrow widths. */
+.menu-toggle {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.3rem;
+    width: 2.1rem;
+    height: 2.1rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--fg);
+    cursor: pointer;
+    flex: none;
+}
+.menu-toggle:hover,
+.menu-toggle:focus-visible { color: var(--accent); border-color: var(--accent); outline: none; }
+.menu-toggle-icon { width: 1.4rem; height: 1.4rem; display: block; }
+
+/* Backdrop only renders on mobile when the menu is open. */
+.menu-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 9;
+    cursor: pointer;
+}
+
 .site-footer {
     border-top: 1px solid var(--rule);
     padding: 1rem 1.25rem;
@@ -1093,14 +1122,75 @@ mark {
 
     .site-header {
         padding: 0.5rem 0.6rem;
-        gap: 0.6rem 1rem;
+        gap: 0.6rem;
+        align-items: center;
+        flex-wrap: nowrap;
     }
 
-    .site-title { font-size: 1rem; }
-    .site-nav { gap: 0.6rem; }
-    .site-nav a { font-size: 0.85rem; }
+    .menu-toggle { display: inline-flex; }
 
-    .search-form { width: 100%; order: 10; margin-left: 0; }
+    .site-title {
+        font-size: 1rem;
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Drawer: pinned under the header, slides in from above when open. */
+    .site-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 20;
+        background: var(--bg);
+        border-bottom: 1px solid var(--rule);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+        padding: 4.5rem 1rem 1.25rem;
+        transform: translateY(-100%);
+        transition: transform 220ms ease-out, visibility 220ms;
+        visibility: hidden;
+    }
+    .site-menu[data-open="true"] {
+        transform: translateY(0);
+        visibility: visible;
+    }
+
+    .site-menu .site-nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+    .site-menu .site-nav a {
+        display: block;
+        padding: 0.85rem 0.5rem;
+        font-size: 1.05rem;
+        font-family: var(--serif);
+        color: var(--fg);
+        border-bottom: 1px solid var(--rule);
+    }
+    .site-menu .site-nav a:last-child { border-bottom: none; }
+    .site-menu .site-nav a:hover,
+    .site-menu .site-nav a:focus-visible { color: var(--accent); text-decoration: none; outline: none; }
+
+    .menu-backdrop { display: block; opacity: 0; pointer-events: none; transition: opacity 220ms ease-out; }
+    .menu-backdrop[data-open="true"] { opacity: 1; pointer-events: auto; }
+
+    /* Animate hamburger bars into an "X" when open. */
+    .menu-toggle .bar {
+        transform-origin: center;
+        transition: transform 200ms ease, opacity 150ms ease;
+    }
+    .menu-toggle[aria-expanded="true"] .bar-top    { transform: translateY(5px) rotate(45deg); }
+    .menu-toggle[aria-expanded="true"] .bar-bottom { transform: translateY(-5px) rotate(-45deg); }
+    .menu-toggle[aria-expanded="true"] .bar-mid    { opacity: 0; transform: scaleX(0); }
+
+    /* Lock body scroll when the drawer is open. */
+    body[data-menu-open="true"] { overflow: hidden; }
+
+    .search-form { flex: 1 1 100%; order: 10; margin-left: 0; }
     .search-input-wrap { width: 100%; }
     .search-input { width: 100%; max-width: none; }
     .search-suggest { right: 0; left: 0; max-width: none; min-width: 0; }
@@ -1157,4 +1247,12 @@ mark {
         gap: 0.3rem;
     }
     .psalm-grid a { padding: 0.45rem 0.2rem; font-size: 0.95rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site-menu,
+    .menu-backdrop,
+    .menu-toggle .bar {
+        transition: none !important;
+    }
 }

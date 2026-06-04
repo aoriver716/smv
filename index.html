@@ -13,13 +13,25 @@
 </head>
 <body>
     <header class="site-header">
+        <button type="button" id="menu-toggle" class="menu-toggle"
+            aria-label="Open menu" aria-controls="site-menu" aria-expanded="false">
+            <svg class="menu-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line class="bar bar-top"    x1="4" y1="7"  x2="20" y2="7"/>
+                <line class="bar bar-mid"    x1="4" y1="12" x2="20" y2="12"/>
+                <line class="bar bar-bottom" x1="4" y1="17" x2="20" y2="17"/>
+            </svg>
+        </button>
         <a href="#/" class="site-title">Scottish Metrical Psalter</a>
-        <nav class="site-nav">
-            <a href="#/">Contents</a>
-            <a href="#/meters">Meters</a>
-            <a href="#/first-lines">First lines</a>
-            <a href="#/concordance">Concordance</a>
-        </nav>
+        <div id="site-menu" class="site-menu" data-open="false">
+            <nav class="site-nav" aria-label="Primary">
+                <a href="#/">Contents</a>
+                <a href="#/meters">Meters</a>
+                <a href="#/first-lines">First lines</a>
+                <a href="#/concordance">Concordance</a>
+            </nav>
+        </div>
+        <div class="menu-backdrop" hidden></div>
         <form id="search-form" class="search-form" role="search" autocomplete="off">
             <div class="search-input-wrap">
                 <input type="search" id="search-input" class="search-input"

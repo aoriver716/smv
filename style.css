@@ -1214,19 +1214,15 @@ mark {
     body[data-menu-open="true"] { overflow: hidden; }
 
     /* Search stays in the header on mobile as a magnifying-glass icon
-       that expands inline. When expanded it takes the full remaining row. */
+       that expands inline. When expanded, hide the title to make room. */
     .search-form { margin-left: auto; }
     .search-form[data-expanded="true"] {
-        position: absolute;
-        top: 50%;
-        left: 0.6rem;
-        right: 0.6rem;
-        transform: translateY(-50%);
-        background: var(--bg);
-        z-index: 20;
+        flex: 1 1 auto;
+        margin-left: 0;
     }
     .search-form[data-expanded="true"] .search-input-wrap { width: 100%; }
     .search-form[data-expanded="true"] .search-input { width: 100%; max-width: none; }
+    .site-header:has(.search-form[data-expanded="true"]) .site-title { display: none; }
     .search-suggest { right: 0; left: 0; max-width: none; min-width: 0; }
 
     /* Setting view: smaller font, tighter verse-number margin so lines don't wrap. */

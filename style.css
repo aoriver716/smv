@@ -59,7 +59,7 @@ a:hover { text-decoration: underline; }
 
 .site-header {
     border-bottom: 1px solid var(--rule);
-    padding: 0.75rem 1.25rem;
+    padding: 1rem 1.25rem;
     display: flex;
     align-items: baseline;
     gap: 1.5rem;
@@ -112,6 +112,10 @@ a:hover { text-decoration: underline; }
 .menu-toggle:hover,
 .menu-toggle:focus-visible { color: var(--accent); border-color: var(--accent); outline: none; }
 .menu-toggle-icon { width: 1.4rem; height: 1.4rem; display: block; }
+/* Swap hamburger / X based on open state. */
+.menu-toggle .icon-close { display: none; }
+.menu-toggle[aria-expanded="true"] .icon-open  { display: none; }
+.menu-toggle[aria-expanded="true"] .icon-close { display: block; }
 
 /* Backdrop positioning (display toggled on mobile only — see media query). */
 .menu-backdrop {
@@ -1135,7 +1139,7 @@ mark {
     }
 
     .site-header {
-        padding: 0.5rem 0.6rem;
+        padding: 0.8rem 0.7rem;
         gap: 0.6rem;
         align-items: center;
         flex-wrap: nowrap;
@@ -1160,7 +1164,7 @@ mark {
     .site-menu {
         display: block;          /* Override [hidden] attribute when shown. */
         position: fixed;
-        top: 3.25rem;            /* Below the mobile header (~3rem tall). */
+        top: 3.75rem;            /* Below the mobile header. */
         left: 0;
         right: 0;
         z-index: 15;             /* Above content (auto) but below header (30). */
@@ -1188,8 +1192,8 @@ mark {
     }
     .drawer-nav a {
         display: block;
-        padding: 1.15rem 0.5rem;
-        font-size: 1.15rem;
+        padding: 0.85rem 0.5rem;
+        font-size: 1.05rem;
         font-family: var(--serif);
         color: var(--fg);
         border-bottom: 1px solid var(--rule);
@@ -1200,15 +1204,6 @@ mark {
 
     .menu-backdrop { display: block; opacity: 0; pointer-events: none; transition: opacity 220ms ease-out; }
     .menu-backdrop[data-open="true"] { opacity: 1; pointer-events: auto; }
-
-    /* Animate hamburger bars into an "X" when open. */
-    .menu-toggle .bar {
-        transform-origin: center;
-        transition: transform 200ms ease, opacity 150ms ease;
-    }
-    .menu-toggle[aria-expanded="true"] .bar-top    { transform: translateY(5px) rotate(45deg); }
-    .menu-toggle[aria-expanded="true"] .bar-bottom { transform: translateY(-5px) rotate(-45deg); }
-    .menu-toggle[aria-expanded="true"] .bar-mid    { opacity: 0; transform: scaleX(0); }
 
     /* Lock body scroll when the drawer is open. */
     body[data-menu-open="true"] { overflow: hidden; }
@@ -1279,8 +1274,7 @@ mark {
 
 @media (prefers-reduced-motion: reduce) {
     .site-menu,
-    .menu-backdrop,
-    .menu-toggle .bar {
+    .menu-backdrop {
         transition: none !important;
     }
 }

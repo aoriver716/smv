@@ -1,5 +1,6 @@
 # Scratch / fetched HTML
 *.html
+!index.html
 
 # Editor & OS junk
 .vscode/

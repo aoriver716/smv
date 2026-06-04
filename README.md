@@ -1,7 +1,18 @@
 # Scottish Metrical Psalter (1650)
 
 The complete 1650 Scottish Metrical Psalter as structured JSON, with a small
-PowerShell script that renders it into a printable Markdown book.
+PowerShell script that renders it into a printable Markdown book and a
+browser-side single-page app that reads the JSON directly.
+
+## Browse online
+
+A static, no-build web app is published from this repository:
+
+**[aoriver716.github.io/smv](https://aoriver716.github.io/smv/)**
+
+It loads [`psalter.json`](psalter.json) at runtime and renders the contents,
+each psalm, individual stanzas, a meter index, a first-line index, and a full
+concordance, all from the same data file.
 
 ## Contents
 
@@ -10,6 +21,7 @@ PowerShell script that renders it into a printable Markdown book.
 | [`psalter.json`](psalter.json) | The complete psalter as JSON &mdash; the source of truth. One entry per *setting* (a psalm has one or more settings to accommodate alternate versions or parts). |
 | [`build-psalter.ps1`](build-psalter.ps1) | Renders `psalter.json` into [`psalter.md`](psalter.md). |
 | [`psalter.md`](psalter.md) | Generated output: the full psalter as Markdown with a table of contents and one page per psalm. |
+| [`index.html`](index.html), [`app.js`](app.js), [`style.css`](style.css) | The browser app. Static files, no build step, no framework. |
 
 ## Data shape
 
@@ -53,6 +65,38 @@ The script:
 - emits a table of contents partitioned into the five traditional books of the Psalter (Psalms 1&ndash;41, 42&ndash;72, 73&ndash;89, 90&ndash;106, 107&ndash;150),
 - renders one page per psalm using a CSS `page-break-after` div, with the inscription italicised at the top and each version or part underneath with its meter and stanzas,
 - appends a "Back to Top" link at the end of every psalm.
+
+## Run the web app locally
+
+The web app uses ES modules, so opening `index.html` directly via `file://`
+will not work in most browsers. Serve the folder over HTTP:
+
+```powershell
+# Python (any recent version)
+python -m http.server 8080
+# or, with Node
+npx serve .
+```
+
+Then open <http://localhost:8080/> in your browser.
+
+### URL scheme
+
+All routes are hash-based, so the page never reloads:
+
+| Route | View |
+|-------|------|
+| `#/` | Title and table of contents (Books I&ndash;V). |
+| `#/psalm/{n}` | A psalm. Multi-setting psalms canonicalise to the first version or part. |
+| `#/psalm/{n}/v{V}` | A specific version of a multi-version psalm. |
+| `#/psalm/{n}/p{P}` | A specific part (Psalm 119 only at present). |
+| `#/psalm/{n}/p{P}/v{V}` | A specific part *and* version (supported, even though no current setting uses both). |
+| `#/psalm/{n}/&hellip;/s{S}` | Zoomed view of a single stanza, with previous/next arrows (also bound to `<-`, `->`, `Esc`). |
+| `#/psalm/{n}/&hellip;?verses=1-3,5` | Filter to the given verses on either of the views above. |
+| `#/meters` | Index of meters (excluding Common Meter, which appears in every psalm). |
+| `#/first-lines` | Alphabetical index of first lines. |
+| `#/concordance` | Letter selector (A&ndash;Z). |
+| `#/concordance/{letter}` | Every word starting with that letter, each occurrence cited and shown in its line with the headword abbreviated. |
 
 ## Sources
 

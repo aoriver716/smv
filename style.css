@@ -1150,12 +1150,15 @@ mark {
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
         padding: 4.5rem 1rem 1.25rem;
         transform: translateY(-100%);
-        transition: transform 220ms ease-out, visibility 220ms;
+        /* Hide after the slide-out finishes, but show instantly on open
+           (the [data-open] rule below overrides the visibility delay). */
+        transition: transform 220ms ease-out, visibility 0s linear 220ms;
         visibility: hidden;
     }
     .site-menu[data-open="true"] {
         transform: translateY(0);
         visibility: visible;
+        transition: transform 220ms ease-out, visibility 0s linear 0s;
     }
 
     .site-menu .site-nav {

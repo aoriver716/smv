@@ -939,11 +939,13 @@ function registerServiceWorker() {
     if (!('serviceWorker' in navigator)) return;
     // Don't try to register on file:// or other non-secure contexts that aren't localhost.
     if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') return;
-    window.addEventListener('load', () => {
+    const doRegister = () => {
         navigator.serviceWorker.register('./sw.js').catch(err => {
             console.warn('Service worker registration failed:', err);
         });
-    });
+    };
+    if (document.readyState === 'complete') doRegister();
+    else window.addEventListener('load', doRegister, { once: true });
 }
 
 function syncSearchInput(route) {

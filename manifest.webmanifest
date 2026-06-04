@@ -1,6 +1,6 @@
 {
     "name": "Scottish Metrical Psalter (1650)",
-    "short_name": "Psalter",
+    "short_name": "Scottish Psalter",
     "description": "Browsable 1650 Scottish Metrical Psalter with search, indexes, and concordance.",
     "id": "/smv/",
     "scope": "./",

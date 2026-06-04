@@ -111,10 +111,11 @@ a:hover { text-decoration: underline; }
 }
 .menu-toggle:hover,
 .menu-toggle:focus-visible { color: var(--accent); border-color: var(--accent); outline: none; }
-.menu-toggle-icon { width: 1.4rem; height: 1.4rem; display: block; }
-/* Swap hamburger / X based on open state. */
+.menu-toggle-icon { width: 1.4rem; height: 1.4rem; }
+/* Show exactly one icon depending on whether the menu is open. */
+.menu-toggle .icon-open  { display: block; }
 .menu-toggle .icon-close { display: none; }
-.menu-toggle[aria-expanded="true"] .icon-open  { display: none; }
+.menu-toggle[aria-expanded="true"] .icon-open  { display: none;  }
 .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
 
 /* Backdrop positioning (display toggled on mobile only — see media query). */

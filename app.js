@@ -797,7 +797,11 @@ function initMobileMenu() {
 
     function open() {
         if (menu.dataset.open === 'true') return;
-        lastFocus = document.activeElement;
+        // Capture focus to restore on close; fall back to the toggle so the
+        // user lands somewhere sensible even if the menu was opened by mouse.
+        lastFocus = document.activeElement && document.activeElement !== document.body
+            ? document.activeElement
+            : toggle;
         menu.dataset.open = 'true';
         backdrop.hidden = false;
         // Force layout so the transition runs.
@@ -807,9 +811,11 @@ function initMobileMenu() {
         toggle.setAttribute('aria-expanded', 'true');
         toggle.setAttribute('aria-label', 'Close menu');
         document.body.dataset.menuOpen = 'true';
-        // Move focus to the first link inside the drawer.
+        // Move focus to the first link inside the drawer. Defer past the
+        // current click event so the browser's default focus-on-click for the
+        // toggle button doesn't override us.
         const firstLink = menu.querySelector('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
-        if (firstLink) firstLink.focus({ preventScroll: true });
+        if (firstLink) requestAnimationFrame(() => firstLink.focus({ preventScroll: true }));
     }
 
     function close() {

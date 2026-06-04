@@ -1,0 +1,7 @@
+# Scratch / fetched HTML
+*.html
+
+# Editor & OS junk
+.vscode/
+.DS_Store
+Thumbs.db

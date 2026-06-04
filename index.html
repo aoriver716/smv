@@ -29,7 +29,15 @@
             <a href="#/first-lines">First lines</a>
             <a href="#/concordance">Concordance</a>
         </nav>
-        <form id="search-form" class="search-form" role="search" autocomplete="off">
+        <form id="search-form" class="search-form" role="search" autocomplete="off" data-expanded="false">
+            <button type="button" id="search-toggle" class="search-toggle"
+                aria-label="Open search" aria-controls="search-input" aria-expanded="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7"/>
+                    <line x1="20" y1="20" x2="16.65" y2="16.65"/>
+                </svg>
+            </button>
             <div class="search-input-wrap">
                 <input type="search" id="search-input" class="search-input"
                     placeholder="Search psalter&hellip;" aria-label="Search psalter"
@@ -46,7 +54,7 @@
             </div>
             <ul id="search-suggest" class="search-suggest" role="listbox" hidden></ul>
         </form>
-        <div id="theme-picker" class="theme-picker"></div>
+        <div id="theme-picker" class="theme-picker theme-picker-desktop"></div>
     </header>
     <div id="site-menu" class="site-menu" data-open="false">
         <nav class="site-nav drawer-nav" aria-label="Primary">
@@ -55,6 +63,7 @@
             <a href="#/first-lines">First lines</a>
             <a href="#/concordance">Concordance</a>
         </nav>
+        <div id="theme-picker-mobile" class="theme-picker theme-picker-mobile"></div>
     </div>
     <div class="menu-backdrop" data-open="false"></div>
     <main id="app" aria-live="polite">

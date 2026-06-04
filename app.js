@@ -876,10 +876,36 @@ function initMobileMenu() {
 
 function initSearchForm() {
     const form    = document.getElementById('search-form');
+    const toggle  = document.getElementById('search-toggle');
     const input   = document.getElementById('search-input');
     const clear   = document.getElementById('search-clear');
     const suggest = document.getElementById('search-suggest');
     if (!form || !input || !suggest) return;
+
+    function expand() {
+        form.dataset.expanded = 'true';
+        if (toggle) toggle.setAttribute('aria-expanded', 'true');
+        requestAnimationFrame(() => input.focus({ preventScroll: true }));
+    }
+    function collapse() {
+        // Keep open while typing or while suggestions are showing.
+        if (input.value.length || !suggest.hidden) return;
+        form.dataset.expanded = 'false';
+        if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    if (toggle) {
+        toggle.addEventListener('click', e => {
+            e.stopPropagation();
+            if (form.dataset.expanded === 'true') collapse();
+            else expand();
+        });
+    }
+
+    input.addEventListener('blur', () => {
+        // Defer so a click on a suggestion still registers before we collapse.
+        setTimeout(collapse, 150);
+    });
 
     const MAX_SUGGEST = 8;
     let activeIdx = -1;
@@ -1037,12 +1063,14 @@ function registerServiceWorker() {
 }
 
 function syncSearchInput(route) {
+    const form  = document.getElementById('search-form');
     const input = document.getElementById('search-input');
     const clear = document.getElementById('search-clear');
     if (!input) return;
     if (route.tokens[0] === 'search') {
         const q = route.params.get('q') || '';
         if (document.activeElement !== input) input.value = q;
+        if (form && q) form.dataset.expanded = 'true';
     } else if (document.activeElement !== input) {
         input.value = '';
     }
@@ -1108,17 +1136,8 @@ function adjacentPsalmNav(currentPsalm, byPsalm) {
 
 const THEME_KEY = 'smv.theme';
 
-const ICONS = {
-    system: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
-    light:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>',
-    dark:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
-};
-
-const THEME_OPTIONS = [
-    { value: 'system', label: 'System' },
-    { value: 'light',  label: 'Light'  },
-    { value: 'dark',   label: 'Dark'   },
-];
+const SUN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
+const MOON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
 
 function applyTheme(value) {
     const root = document.documentElement;
@@ -1129,84 +1148,82 @@ function applyTheme(value) {
     }
 }
 
+function systemPrefersDark() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
 function initTheme() {
-    const saved = localStorage.getItem(THEME_KEY) || 'system';
-    applyTheme(saved);
-    const host = document.getElementById('theme-picker');
-    if (!host) return;
+    // Default: follow the system until the user explicitly chooses.
+    const saved = localStorage.getItem(THEME_KEY);
+    applyTheme(saved || 'system');
 
-    host.innerHTML = '';
-    const label = el('span', { class: 'theme-picker-label' }, 'Theme:');
-    const toggle = el('button', {
-        type: 'button',
-        class: 'theme-picker-toggle',
-        'aria-haspopup': 'listbox',
-        'aria-expanded': 'false',
-        'aria-label': 'Theme',
-        title: 'Theme',
-        html: ICONS[saved] || ICONS.system,
-    });
-    const menu = el('ul', {
-        class: 'theme-picker-menu',
-        role: 'listbox',
-        hidden: 'hidden',
-    });
+    const hosts = [
+        document.getElementById('theme-picker'),
+        document.getElementById('theme-picker-mobile'),
+    ].filter(Boolean);
+    if (!hosts.length) return;
 
-    let current = saved;
+    // Source: 'system' until the user picks; then 'user'.
+    // Active: 'light' | 'dark' — whichever theme is currently rendered.
+    let source = saved ? 'user' : 'system';
+    let active = saved || (systemPrefersDark() ? 'dark' : 'light');
 
-    const setCurrent = (value) => {
-        current = value;
-        if (value === 'system') localStorage.removeItem(THEME_KEY);
-        else localStorage.setItem(THEME_KEY, value);
-        applyTheme(value);
-        toggle.innerHTML = ICONS[value] || ICONS.system;
-        menu.querySelectorAll('.theme-picker-option').forEach(btn => {
-            btn.setAttribute('aria-selected', btn.dataset.value === value ? 'true' : 'false');
-        });
-    };
+    const widgets = hosts.map(buildWidget);
 
-    const close = () => {
-        host.removeAttribute('data-open');
-        toggle.setAttribute('aria-expanded', 'false');
-        menu.hidden = true;
-    };
-    const open = () => {
-        host.setAttribute('data-open', 'true');
-        toggle.setAttribute('aria-expanded', 'true');
-        menu.hidden = false;
-    };
-
-    for (const opt of THEME_OPTIONS) {
-        const btn = el('button', {
+    function buildWidget(host) {
+        host.innerHTML = '';
+        const sun = el('span', { class: 'theme-picker-icon sun', html: SUN_SVG, 'aria-hidden': 'true' });
+        const moon = el('span', { class: 'theme-picker-icon moon', html: MOON_SVG, 'aria-hidden': 'true' });
+        const sw = el('button', {
             type: 'button',
-            class: 'theme-picker-option',
-            role: 'option',
-            'data-value': opt.value,
-            'aria-selected': opt.value === current ? 'true' : 'false',
-            html: ICONS[opt.value] + '<span>' + opt.label + '</span>',
-            onclick: () => { setCurrent(opt.value); close(); },
+            class: 'theme-switch',
+            role: 'switch',
+            'aria-checked': active === 'dark' ? 'true' : 'false',
+            'aria-label': 'Toggle dark mode',
+            title: 'Toggle theme',
         });
-        menu.appendChild(el('li', null, btn));
+        sw.addEventListener('click', () => setActive(active === 'dark' ? 'light' : 'dark', 'user'));
+        host.appendChild(sun);
+        host.appendChild(sw);
+        host.appendChild(moon);
+        return { host, sw };
     }
 
-    toggle.addEventListener('click', e => {
-        e.stopPropagation();
-        if (menu.hidden) open(); else close();
-    });
-    document.addEventListener('click', e => {
-        if (!host.contains(e.target)) close();
-    });
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && !menu.hidden) {
-            e.preventDefault();
-            close();
-            toggle.focus();
+    function setActive(next, src) {
+        active = next;
+        source = src;
+        if (src === 'user') {
+            localStorage.setItem(THEME_KEY, next);
+            applyTheme(next);
+        } else {
+            // System change while no explicit choice — stay on 'system' mode.
+            localStorage.removeItem(THEME_KEY);
+            applyTheme('system');
         }
-    });
+        sync();
+    }
 
-    host.appendChild(label);
-    host.appendChild(toggle);
-    host.appendChild(menu);
+    function sync() {
+        for (const { host, sw } of widgets) {
+            host.dataset.active = active;
+            host.dataset.source = source;
+            sw.setAttribute('aria-checked', active === 'dark' ? 'true' : 'false');
+        }
+    }
+
+    sync();
+
+    // Follow OS theme changes while the user hasn't chosen.
+    const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq) {
+        const onChange = e => {
+            if (source !== 'system') return;
+            active = e.matches ? 'dark' : 'light';
+            sync();
+        };
+        if (mq.addEventListener) mq.addEventListener('change', onChange);
+        else if (mq.addListener) mq.addListener(onChange);
+    }
 }
 
 // ---------- Present mode ----------

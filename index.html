@@ -23,15 +23,12 @@
             </svg>
         </button>
         <a href="#/" class="site-title">Scottish Metrical Psalter</a>
-        <div id="site-menu" class="site-menu" data-open="false">
-            <nav class="site-nav" aria-label="Primary">
-                <a href="#/">Contents</a>
-                <a href="#/meters">Meters</a>
-                <a href="#/first-lines">First lines</a>
-                <a href="#/concordance">Concordance</a>
-            </nav>
-        </div>
-        <div class="menu-backdrop" hidden></div>
+        <nav class="site-nav primary-nav" aria-label="Primary">
+            <a href="#/">Contents</a>
+            <a href="#/meters">Meters</a>
+            <a href="#/first-lines">First lines</a>
+            <a href="#/concordance">Concordance</a>
+        </nav>
         <form id="search-form" class="search-form" role="search" autocomplete="off">
             <div class="search-input-wrap">
                 <input type="search" id="search-input" class="search-input"
@@ -51,6 +48,15 @@
         </form>
         <div id="theme-picker" class="theme-picker"></div>
     </header>
+    <div id="site-menu" class="site-menu" data-open="false">
+        <nav class="site-nav drawer-nav" aria-label="Primary">
+            <a href="#/">Contents</a>
+            <a href="#/meters">Meters</a>
+            <a href="#/first-lines">First lines</a>
+            <a href="#/concordance">Concordance</a>
+        </nav>
+    </div>
+    <div class="menu-backdrop" data-open="false"></div>
     <main id="app" aria-live="polite">
         <p class="loading">Loading psalter&hellip;</p>
     </main>

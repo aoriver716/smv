@@ -803,10 +803,6 @@ function initMobileMenu() {
             ? document.activeElement
             : toggle;
         menu.dataset.open = 'true';
-        backdrop.hidden = false;
-        // Force layout so the transition runs.
-        // eslint-disable-next-line no-unused-expressions
-        backdrop.offsetWidth;
         backdrop.dataset.open = 'true';
         toggle.setAttribute('aria-expanded', 'true');
         toggle.setAttribute('aria-label', 'Close menu');
@@ -825,14 +821,6 @@ function initMobileMenu() {
         toggle.setAttribute('aria-expanded', 'false');
         toggle.setAttribute('aria-label', 'Open menu');
         delete document.body.dataset.menuOpen;
-        // Hide backdrop after the fade-out completes.
-        const onEnd = () => {
-            if (menu.dataset.open !== 'true') backdrop.hidden = true;
-            backdrop.removeEventListener('transitionend', onEnd);
-        };
-        backdrop.addEventListener('transitionend', onEnd);
-        // Fallback in case transitionend doesn't fire (reduced motion).
-        setTimeout(() => { if (menu.dataset.open !== 'true') backdrop.hidden = true; }, 300);
         if (lastFocus && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true });
     }
 

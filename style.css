@@ -67,8 +67,7 @@ a:hover { text-decoration: underline; }
     position: sticky;
     top: 0;
     background: var(--bg);
-    /* Above the mobile drawer (z:20) so the toggle button is always reachable. */
-    z-index: 30;
+    z-index: 10;
 }
 
 .site-title {
@@ -91,6 +90,10 @@ a:hover { text-decoration: underline; }
 
 .site-nav a:hover { color: var(--accent); }
 
+/* Mobile drawer & backdrop: hidden on desktop, shown via media query below. */
+.site-menu,
+.menu-backdrop { display: none; }
+
 /* Hamburger toggle: hidden on desktop, shown at narrow widths. */
 .menu-toggle {
     display: none;
@@ -110,9 +113,8 @@ a:hover { text-decoration: underline; }
 .menu-toggle:focus-visible { color: var(--accent); border-color: var(--accent); outline: none; }
 .menu-toggle-icon { width: 1.4rem; height: 1.4rem; display: block; }
 
-/* Backdrop only renders on mobile when the menu is open. */
+/* Backdrop positioning (display toggled on mobile only — see media query). */
 .menu-backdrop {
-    display: none;
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.35);
@@ -1130,6 +1132,9 @@ mark {
 
     .menu-toggle { display: inline-flex; }
 
+    /* Hide the inline header nav on mobile — the drawer takes over. */
+    .primary-nav { display: none; }
+
     .site-title {
         font-size: 1rem;
         flex: 1 1 auto;
@@ -1139,18 +1144,20 @@ mark {
         text-overflow: ellipsis;
     }
 
-    /* Drawer: pinned under the header, slides in from above when open. */
+    /* Drawer: a sibling of the header so its stacking is independent.
+       Slides in from above when open. */
     .site-menu {
+        display: block;          /* Override [hidden] attribute when shown. */
         position: fixed;
-        top: 0;
+        top: 3.25rem;            /* Below the mobile header (~3rem tall). */
         left: 0;
         right: 0;
-        z-index: 20;
+        z-index: 15;             /* Above content (auto) but below header (30). */
         background: var(--bg);
         border-bottom: 1px solid var(--rule);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
-        padding: 4.5rem 1rem 1.25rem;
-        transform: translateY(-100%);
+        padding: 0.5rem 1rem 1.25rem;
+        transform: translateY(-110%);
         /* Hide after the slide-out finishes, but show instantly on open
            (the [data-open] rule below overrides the visibility delay). */
         transition: transform 220ms ease-out, visibility 0s linear 220ms;
@@ -1162,12 +1169,13 @@ mark {
         transition: transform 220ms ease-out, visibility 0s linear 0s;
     }
 
-    .site-menu .site-nav {
+    .drawer-nav {
+        display: flex;
         flex-direction: column;
         align-items: stretch;
         gap: 0;
     }
-    .site-menu .site-nav a {
+    .drawer-nav a {
         display: block;
         padding: 0.85rem 0.5rem;
         font-size: 1.05rem;
@@ -1175,9 +1183,9 @@ mark {
         color: var(--fg);
         border-bottom: 1px solid var(--rule);
     }
-    .site-menu .site-nav a:last-child { border-bottom: none; }
-    .site-menu .site-nav a:hover,
-    .site-menu .site-nav a:focus-visible { color: var(--accent); text-decoration: none; outline: none; }
+    .drawer-nav a:last-child { border-bottom: none; }
+    .drawer-nav a:hover,
+    .drawer-nav a:focus-visible { color: var(--accent); text-decoration: none; outline: none; }
 
     .menu-backdrop { display: block; opacity: 0; pointer-events: none; transition: opacity 220ms ease-out; }
     .menu-backdrop[data-open="true"] { opacity: 1; pointer-events: auto; }

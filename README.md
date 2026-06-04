@@ -97,7 +97,7 @@ All routes are hash-based, so the page never reloads:
 | `#/first-lines` | Alphabetical index of first lines. |
 | `#/concordance` | Letter selector (A&ndash;Z). |
 | `#/concordance/{letter}` | Every word starting with that letter, each occurrence cited and shown in its line with the headword abbreviated. Articles, basic conjunctions/prepositions, and auxiliary verbs (incl. archaic forms) are excluded. |
-| `#/search?q=&hellip;` | Full-text search results for the given query, with matches highlighted. The search box in the header submits to this route. |
+| `#/search?q=&hellip;` | Full-text search results for the given query, with matches highlighted. The search box in the header opens a live suggestions panel as you type; Enter (or clicking "See all") goes to the full results page. |
 
 A theme selector (System / Light / Dark) is in the top-right of the header.
 The choice is remembered in `localStorage`; System (the default) follows
@@ -108,6 +108,11 @@ copies the current URL to the clipboard, and on the setting view there are
 **Previous / Next psalm** links beneath the stanzas. The site has a print
 stylesheet that hides navigation chrome and lays the stanzas out cleanly on
 paper &mdash; useful for printing a single psalm setting.
+
+The site is also a Progressive Web App: it ships a manifest and a service
+worker so it can be installed (Chrome/Edge address-bar install icon; iOS
+Safari **Share &rarr; Add to Home Screen**) and works offline once you've
+loaded it.
 
 ## Sources
 

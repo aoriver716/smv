@@ -1,0 +1,20 @@
+{
+    "name": "Scottish Metrical Psalter (1650)",
+    "short_name": "Psalter",
+    "description": "Browsable 1650 Scottish Metrical Psalter with search, indexes, and concordance.",
+    "id": "/smv/",
+    "scope": "./",
+    "start_url": "./",
+    "display": "standalone",
+    "orientation": "any",
+    "background_color": "#f5ecd9",
+    "theme_color": "#1a3a5c",
+    "icons": [
+        {
+            "src": "./icon.svg",
+            "type": "image/svg+xml",
+            "sizes": "any",
+            "purpose": "any maskable"
+        }
+    ]
+}

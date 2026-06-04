@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Scottish Metrical Psalter (1650)</title>
     <link rel="stylesheet" href="./style.css">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="./icon.svg">
+    <link rel="apple-touch-icon" href="./icon.svg">
+    <meta name="theme-color" content="#1a3a5c" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f5ecd9" media="(prefers-color-scheme: light)">
 </head>
 <body>
     <header class="site-header">
@@ -15,8 +20,22 @@
             <a href="#/first-lines">First lines</a>
             <a href="#/concordance">Concordance</a>
         </nav>
-        <form id="search-form" class="search-form" role="search">
-            <input type="search" id="search-input" class="search-input" placeholder="Search psalter&hellip;" aria-label="Search psalter" autocomplete="off">
+        <form id="search-form" class="search-form" role="search" autocomplete="off">
+            <div class="search-input-wrap">
+                <input type="search" id="search-input" class="search-input"
+                    placeholder="Search psalter&hellip;" aria-label="Search psalter"
+                    autocomplete="off" spellcheck="false"
+                    aria-controls="search-suggest" aria-expanded="false"
+                    aria-autocomplete="list">
+                <button type="button" id="search-clear" class="search-clear" aria-label="Clear search" hidden>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                        <line x1="6" y1="18" x2="18" y2="6"/>
+                    </svg>
+                </button>
+            </div>
+            <ul id="search-suggest" class="search-suggest" role="listbox" hidden></ul>
         </form>
         <div id="theme-picker" class="theme-picker"></div>
     </header>

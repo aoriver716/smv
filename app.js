@@ -110,6 +110,7 @@ const App = {
 
     async boot() {
         initTheme();
+        initSearchForm();
         try {
             const resp = await fetch('./psalter.json');
             if (!resp.ok) throw new Error('HTTP ' + resp.status);
@@ -146,6 +147,7 @@ const App = {
     render() {
         const route = parseRoute();
         document.title = 'Scottish Metrical Psalter';
+        syncSearchInput(route);
         // Present mode only applies to stanza views; leave it if so, clear otherwise.
         const inStanza = route.tokens[0] === 'psalm'
             && route.tokens.some(t => /^s\d+$/.test(t));
@@ -159,6 +161,7 @@ const App = {
             if (head === 'meters')        return this.renderMeters();
             if (head === 'first-lines')   return this.renderFirstLines();
             if (head === 'concordance')   return this.renderConcordance(route.tokens.slice(1));
+            if (head === 'search')        return this.renderSearch(route.params);
             this.renderNotFound();
         } catch (e) {
             console.error(e);
@@ -306,6 +309,10 @@ const App = {
             children.push(el('div', { class: 'stanzas' }, ...stanzaNodes));
         }
 
+        children.push(copyLinkButton());
+
+        children.push(adjacentPsalmNav(setting.psalm, this.byPsalm));
+
         children.push(el('a', { class: 'back-link', href: '#/' }, '\u2190 Back to contents'));
 
         mount(el('article', { class: 'setting' }, ...children));
@@ -374,7 +381,7 @@ const App = {
             el('div', { class: 'stanza-body-wrap' },
                 el('div', { class: 'stanza-body' }, ...lineNodes)),
             el('nav', { class: 'stanza-nav' }, prevLink, nextLink),
-            presentBtn,
+            el('div', { class: 'stanza-actions' }, presentBtn, copyLinkButton()),
             back,
         ));
         // Re-applying the same hash (e.g. navigating to the same stanza on
@@ -577,6 +584,66 @@ const App = {
         ));
     },
 
+    renderSearch(params) {
+        const qRaw = (params.get('q') || '').trim();
+        document.title = qRaw
+            ? `\u201C${qRaw}\u201D \u2014 Search \u2014 Scottish Metrical Psalter`
+            : 'Search \u2014 Scottish Metrical Psalter';
+
+        const children = [el('h1', null, 'Search')];
+
+        if (!qRaw) {
+            children.push(el('p', { class: 'subtitle' },
+                'Type a query in the search box above to find lines of the psalter.'));
+            children.push(el('a', { class: 'back-link', href: '#/' }, '\u2190 Back to contents'));
+            return mount(el('article', { class: 'index-page' }, ...children));
+        }
+
+        const re = new RegExp(escapeRe(qRaw), 'i');
+        const results = [];
+        for (const s of this.data.settings) {
+            for (let si = 0; si < s.stanzas.length; si++) {
+                const stanza = s.stanzas[si];
+                for (const line of stanza) {
+                    const raw = String(line.text || '').replace(/^\t+/, '');
+                    if (re.test(raw)) {
+                        results.push({
+                            setting: s,
+                            stanzaIdx: si,
+                            text: raw,
+                            verse: line._verse,
+                        });
+                    }
+                }
+            }
+        }
+
+        children.push(el('p', { class: 'subtitle' },
+            results.length === 0
+                ? `No matches for \u201C${qRaw}\u201D.`
+                : `${results.length} match${results.length === 1 ? '' : 'es'} for \u201C${qRaw}\u201D.`));
+
+        if (results.length) {
+            const list = el('ul', { class: 'search-results' });
+            for (const r of results) {
+                const cite = citation(r.setting) + (r.verse != null ? ', v.\u202F' + r.verse : '');
+                list.appendChild(el('li', null,
+                    el('a', {
+                        class: 'search-result',
+                        href: settingUrl(r.setting, r.stanzaIdx + 1),
+                    },
+                        el('span', { class: 'cite' }, cite),
+                        el('span', { class: 'snippet', html: highlightMatches(r.text, qRaw) }),
+                    ),
+                ));
+            }
+            children.push(list);
+        }
+
+        children.push(el('a', { class: 'back-link', href: '#/' }, '\u2190 Back to contents'));
+        mount(el('article', { class: 'index-page' }, ...children));
+    },
+
     renderNotFound() {
         mount(el('article', null,
             el('h1', null, 'Not found'),
@@ -694,6 +761,105 @@ function abbreviateInContext(o) {
     return {
         html: escapeHtml(before) + '<em>' + escapeHtml(abbr) + '</em>' + escapeHtml(after),
     };
+}
+
+// ---------- Search helpers ----------
+
+function escapeRe(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightMatches(text, q) {
+    if (!q) return escapeHtml(text);
+    const re = new RegExp(escapeRe(q), 'gi');
+    let result = '';
+    let last = 0;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+        result += escapeHtml(text.slice(last, m.index));
+        result += '<mark>' + escapeHtml(m[0]) + '</mark>';
+        last = m.index + m[0].length;
+        if (m[0].length === 0) re.lastIndex++;
+    }
+    result += escapeHtml(text.slice(last));
+    return result;
+}
+
+function initSearchForm() {
+    const form = document.getElementById('search-form');
+    const input = document.getElementById('search-input');
+    if (!form || !input) return;
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        const q = input.value.trim();
+        location.hash = q ? '#/search?q=' + encodeURIComponent(q) : '#/';
+    });
+}
+
+function syncSearchInput(route) {
+    const input = document.getElementById('search-input');
+    if (!input) return;
+    if (route.tokens[0] === 'search') {
+        const q = route.params.get('q') || '';
+        if (document.activeElement !== input) input.value = q;
+    } else if (document.activeElement !== input) {
+        input.value = '';
+    }
+}
+
+// ---------- Copy link & psalm-nav helpers ----------
+
+function copyLinkButton() {
+    const btn = el('button', {
+        type: 'button',
+        class: 'copy-link-btn',
+        title: 'Copy a link to this page',
+    }, 'Copy link');
+    btn.addEventListener('click', () => {
+        const url = location.href;
+        const restore = () => {
+            btn.textContent = 'Copy link';
+            btn.classList.remove('copied');
+        };
+        const ok = () => {
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(restore, 1500);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(ok).catch(() => {
+                btn.textContent = 'Press Ctrl+C';
+                setTimeout(restore, 2000);
+            });
+        } else {
+            btn.textContent = 'Press Ctrl+C';
+            setTimeout(restore, 2000);
+        }
+    });
+    return btn;
+}
+
+function adjacentPsalmNav(currentPsalm, byPsalm) {
+    if (!byPsalm) return el('span');
+    const nums = [...byPsalm.keys()].sort((a, b) => a - b);
+    const i = nums.indexOf(currentPsalm);
+    const prev = i > 0 ? nums[i - 1] : null;
+    const next = i >= 0 && i < nums.length - 1 ? nums[i + 1] : null;
+
+    const nav = el('nav', { class: 'psalm-nav', 'aria-label': 'Adjacent psalms' });
+    if (prev != null) {
+        const prevSetting = byPsalm.get(prev)[0];
+        nav.appendChild(el('a', { href: settingUrl(prevSetting) }, '\u2190 Psalm ' + prev));
+    } else {
+        nav.appendChild(el('span', { class: 'spacer' }));
+    }
+    if (next != null) {
+        const nextSetting = byPsalm.get(next)[0];
+        nav.appendChild(el('a', { href: settingUrl(nextSetting) }, 'Psalm ' + next + ' \u2192'));
+    } else {
+        nav.appendChild(el('span', { class: 'spacer' }));
+    }
+    return nav;
 }
 
 // ---------- Theme ----------

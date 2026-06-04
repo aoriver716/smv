@@ -522,7 +522,6 @@ main {
 /* ------ Theme selector in header ------ */
 
 .theme-picker {
-    margin-left: auto;
     position: relative;
     display: flex;
     align-items: center;
@@ -644,7 +643,9 @@ body.presenting .site-footer,
 body.presenting .crumbs,
 body.presenting .stanza-num,
 body.presenting .stanza-nav,
+body.presenting .stanza-actions,
 body.presenting .present-btn,
+body.presenting .copy-link-btn,
 body.presenting .back-to-setting {
     display: none !important;
 }
@@ -770,3 +771,208 @@ body.presenting .stanza-body .verse {
 }
 
 .modal-controls button:hover { filter: brightness(1.1); }
+
+/* ------ Search box in header ------ */
+
+.search-form {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    padding: 0.3rem 0.6rem;
+    width: 11rem;
+    max-width: 50vw;
+}
+
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* ------ Search results ------ */
+
+.search-results {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.search-results li { margin: 0; padding: 0; }
+
+.search-results .search-result {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.5rem 0.4rem;
+    border-bottom: 1px dotted var(--rule);
+    color: inherit;
+    text-decoration: none;
+}
+
+.search-results .search-result:hover {
+    background: var(--selection);
+    text-decoration: none;
+}
+
+.search-results .cite {
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.search-results .snippet {
+    font-family: var(--serif);
+}
+
+mark {
+    background: var(--selection);
+    color: inherit;
+    padding: 0 0.1em;
+    border-radius: 2px;
+}
+
+/* ------ Copy-link button ------ */
+
+.copy-link-btn {
+    display: inline-block;
+    margin: 0 0 1rem;
+    padding: 0.35rem 0.8rem;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.copy-link-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.copy-link-btn.copied {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* Stanza view aligns the Present + Copy buttons in a row. */
+.stanza-view .stanza-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 0 0 1rem;
+}
+.stanza-view .stanza-actions .present-btn,
+.stanza-view .stanza-actions .copy-link-btn {
+    margin: 0;
+}
+
+/* Setting view stacks the copy button under the stanzas. */
+.setting .copy-link-btn {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ------ Adjacent-psalm nav ------ */
+
+.psalm-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--sans);
+    font-size: 0.95rem;
+}
+
+.psalm-nav a {
+    color: var(--muted);
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+}
+
+.psalm-nav a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    text-decoration: none;
+}
+
+.psalm-nav .spacer {
+    flex: none;
+    width: 1px;
+}
+
+/* ------ Print ------ */
+
+@media print {
+    .site-header,
+    .site-footer,
+    .search-form,
+    .theme-picker,
+    .present-btn,
+    .copy-link-btn,
+    .stanza-actions,
+    .psalm-nav,
+    .stanza-nav,
+    .alt-settings,
+    .back-link,
+    .crumbs,
+    .stanza-num,
+    .filter-note,
+    .appendix-links {
+        display: none !important;
+    }
+
+    html, body {
+        background: white !important;
+        color: black !important;
+    }
+
+    main {
+        max-width: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .setting h1,
+    .stanza-view h1 {
+        font-size: 18pt;
+    }
+
+    .setting .inscription { font-size: 11pt; }
+    .setting .meter { font-size: 10pt; color: #444; }
+
+    .stanzas {
+        font-size: 12pt;
+        line-height: 1.45;
+    }
+
+    .stanzas .stanza,
+    .stanza-view .stanza-body {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        color: black !important;
+        padding-left: 2.5em;
+    }
+
+    .stanzas .stanza .verse,
+    .stanza-view .stanza-body .verse {
+        color: #555 !important;
+    }
+
+    a { color: inherit; text-decoration: none; }
+}

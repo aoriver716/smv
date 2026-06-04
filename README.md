@@ -97,10 +97,17 @@ All routes are hash-based, so the page never reloads:
 | `#/first-lines` | Alphabetical index of first lines. |
 | `#/concordance` | Letter selector (A&ndash;Z). |
 | `#/concordance/{letter}` | Every word starting with that letter, each occurrence cited and shown in its line with the headword abbreviated. Articles, basic conjunctions/prepositions, and auxiliary verbs (incl. archaic forms) are excluded. |
+| `#/search?q=&hellip;` | Full-text search results for the given query, with matches highlighted. The search box in the header submits to this route. |
 
 A theme selector (System / Light / Dark) is in the top-right of the header.
 The choice is remembered in `localStorage`; System (the default) follows
 your OS preference.
+
+On each psalm setting and stanza view there is a **Copy link** button that
+copies the current URL to the clipboard, and on the setting view there are
+**Previous / Next psalm** links beneath the stanzas. The site has a print
+stylesheet that hides navigation chrome and lays the stanzas out cleanly on
+paper &mdash; useful for printing a single psalm setting.
 
 ## Sources
 

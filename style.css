@@ -521,18 +521,101 @@ main {
 
 /* ------ Theme selector in header ------ */
 
-.theme-select {
+.theme-picker {
     margin-left: auto;
-    color: var(--muted);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
     font-family: var(--sans);
     font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.theme-picker-label {
+    color: var(--muted);
+}
+
+.theme-picker-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
     background: transparent;
     border: 1px solid var(--rule);
     border-radius: 4px;
-    padding: 0.2rem 0.4rem;
+    color: var(--muted);
+    cursor: pointer;
 }
 
-.theme-select:focus { outline: 1px solid var(--accent); }
+.theme-picker-toggle:hover,
+.theme-picker[data-open="true"] .theme-picker-toggle {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.theme-picker-toggle svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.theme-picker-menu {
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    right: 0;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem;
+    min-width: 9rem;
+    z-index: 20;
+}
+
+.theme-picker-menu[hidden] { display: none; }
+
+.theme-picker-menu li {
+    margin: 0;
+}
+
+.theme-picker-option {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    color: var(--fg);
+    font-family: inherit;
+    font-size: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.theme-picker-option svg {
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+    color: var(--muted);
+}
+
+.theme-picker-option:hover {
+    background: var(--selection);
+}
+
+.theme-picker-option[aria-selected="true"] {
+    color: var(--accent);
+}
+
+.theme-picker-option[aria-selected="true"] svg {
+    color: var(--accent);
+}
 
 /* ------ Present button ------ */
 

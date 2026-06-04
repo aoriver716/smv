@@ -701,27 +701,105 @@ function abbreviateInContext(o) {
 
 const THEME_KEY = 'smv.theme';
 
+const ICONS = {
+    system: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+    light:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>',
+    dark:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+};
+
+const THEME_OPTIONS = [
+    { value: 'system', label: 'System' },
+    { value: 'light',  label: 'Light'  },
+    { value: 'dark',   label: 'Dark'   },
+];
+
 function applyTheme(value) {
     const root = document.documentElement;
     if (value === 'light' || value === 'dark') {
-        root.dataset.theme = value;
+        root.setAttribute('data-theme', value);
     } else {
-        delete root.dataset.theme;
+        root.removeAttribute('data-theme');
     }
 }
 
 function initTheme() {
     const saved = localStorage.getItem(THEME_KEY) || 'system';
     applyTheme(saved);
-    const sel = document.getElementById('theme-select');
-    if (!sel) return;
-    sel.value = saved;
-    sel.addEventListener('change', () => {
-        const v = sel.value;
-        if (v === 'system') localStorage.removeItem(THEME_KEY);
-        else localStorage.setItem(THEME_KEY, v);
-        applyTheme(v);
+    const host = document.getElementById('theme-picker');
+    if (!host) return;
+
+    host.innerHTML = '';
+    const label = el('span', { class: 'theme-picker-label' }, 'Theme:');
+    const toggle = el('button', {
+        type: 'button',
+        class: 'theme-picker-toggle',
+        'aria-haspopup': 'listbox',
+        'aria-expanded': 'false',
+        'aria-label': 'Theme',
+        title: 'Theme',
+        html: ICONS[saved] || ICONS.system,
     });
+    const menu = el('ul', {
+        class: 'theme-picker-menu',
+        role: 'listbox',
+        hidden: 'hidden',
+    });
+
+    let current = saved;
+
+    const setCurrent = (value) => {
+        current = value;
+        if (value === 'system') localStorage.removeItem(THEME_KEY);
+        else localStorage.setItem(THEME_KEY, value);
+        applyTheme(value);
+        toggle.innerHTML = ICONS[value] || ICONS.system;
+        menu.querySelectorAll('.theme-picker-option').forEach(btn => {
+            btn.setAttribute('aria-selected', btn.dataset.value === value ? 'true' : 'false');
+        });
+    };
+
+    const close = () => {
+        host.removeAttribute('data-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        menu.hidden = true;
+    };
+    const open = () => {
+        host.setAttribute('data-open', 'true');
+        toggle.setAttribute('aria-expanded', 'true');
+        menu.hidden = false;
+    };
+
+    for (const opt of THEME_OPTIONS) {
+        const btn = el('button', {
+            type: 'button',
+            class: 'theme-picker-option',
+            role: 'option',
+            'data-value': opt.value,
+            'aria-selected': opt.value === current ? 'true' : 'false',
+            html: ICONS[opt.value] + '<span>' + opt.label + '</span>',
+            onclick: () => { setCurrent(opt.value); close(); },
+        });
+        menu.appendChild(el('li', null, btn));
+    }
+
+    toggle.addEventListener('click', e => {
+        e.stopPropagation();
+        if (menu.hidden) open(); else close();
+    });
+    document.addEventListener('click', e => {
+        if (!host.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !menu.hidden) {
+            e.preventDefault();
+            close();
+            toggle.focus();
+        }
+    });
+
+    host.appendChild(label);
+    host.appendChild(toggle);
+    host.appendChild(menu);
 }
 
 // ---------- Present mode ----------

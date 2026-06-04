@@ -11,6 +11,53 @@ const BOOKS = [
 
 const ALPHA = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
+// Words excluded from the concordance because they appear so often
+// that they swamp meaningful entries. Includes modern function words
+// and their archaic equivalents (thee/thou/hath/etc.).
+const STOPWORDS = new Set([
+    // Articles
+    'a', 'an', 'the',
+    // Coordinating conjunctions
+    'and', 'but', 'or', 'nor', 'so', 'yet', 'for',
+    // Prepositions
+    'of', 'in', 'on', 'at', 'to', 'from', 'by', 'with', 'as',
+    'into', 'unto', 'upon', 'against', 'before', 'after', 'through',
+    'throughout', 'between', 'among', 'about', 'without', 'within',
+    // Copula / auxiliaries (modern)
+    'is', 'are', 'was', 'were', 'be', 'been', 'being', 'am',
+    'have', 'has', 'had', 'having',
+    'do', 'does', 'did',
+    'will', 'would', 'shall', 'should', 'may', 'might',
+    'can', 'could', 'must',
+    // Copula / auxiliaries (archaic)
+    'hath', 'hast',
+    'doth', 'dost',
+    'wilt', 'wert', 'art',
+    // Personal pronouns (modern)
+    'i', 'me', 'my', 'mine',
+    'we', 'us', 'our', 'ours',
+    'you', 'your', 'yours',
+    'he', 'him', 'his',
+    'she', 'her', 'hers',
+    'it', 'its',
+    'they', 'them', 'their', 'theirs',
+    // Personal pronouns (archaic)
+    'thee', 'thou', 'thy', 'thine', 'ye',
+    // Demonstratives / determiners
+    'that', 'this', 'these', 'those',
+    // Relative / interrogative
+    'which', 'who', 'whom', 'whose', 'what',
+    'when', 'where', 'why', 'how',
+    // Subordinating conjunctions / adverbs
+    'if', 'then', 'than', 'because', 'though', 'although',
+    'while', 'until', 'since', 'whether',
+    // Quantifiers / common adverbs
+    'not', 'no', 'all', 'any', 'some', 'both', 'such', 'same', 'other',
+    'more', 'most', 'less', 'much', 'many',
+    'very', 'just', 'only', 'also', 'too', 'ever', 'never',
+    'there', 'here', 'now',
+]);
+
 // ------ DOM helpers ------
 
 function el(tag, attrs, ...children) {
@@ -345,8 +392,8 @@ const App = {
 
         const blocks = meters.map(m => {
             const items = byMeter.get(m).map(s => el('li', null,
-                el('a', { href: settingUrl(s) }, `Psalm ${s.psalm}` + (settingDesignator(s) ? ` (${settingDesignator(s)})` : '')),
-                el('span', { class: 'inscription' }, s.inscription || ''),
+                el('a', { href: settingUrl(s) }, citation(s)),
+                el('span', { class: 'first-line' }, firstLineOfSetting(s)),
             ));
             return el('section', { class: 'meter-block' },
                 el('h2', null, m),
@@ -377,14 +424,34 @@ const App = {
         }
         entries.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
 
-        const items = entries.map(e => el('li', null,
-            el('span', { class: 'first-line' }, e.first),
-            el('a', { class: 'citation', href: settingUrl(e.setting) }, citation(e.setting)),
-        ));
+        const blocks = [];
+        let curLetter = null;
+        let curItems = [];
+        const flush = () => {
+            if (!curItems.length) return;
+            blocks.push(el('h2', { class: 'letter-separator' }, curLetter));
+            blocks.push(el('ul', null, ...curItems));
+            curItems = [];
+        };
+        for (const e of entries) {
+            const first = (e.sortKey[0] || '').toUpperCase();
+            const letter = /[A-Z]/.test(first) ? first : '\u2014';
+            if (letter !== curLetter) {
+                flush();
+                curLetter = letter;
+            }
+            curItems.push(el('li', null,
+                el('a', { class: 'first-line-row', href: settingUrl(e.setting) },
+                    el('span', { class: 'first-line' }, e.first),
+                    el('span', { class: 'citation' }, citation(e.setting)),
+                ),
+            ));
+        }
+        flush();
 
         mount(el('article', { class: 'index-page first-lines' },
             el('h1', null, 'Index of First Lines'),
-            el('ul', null, ...items),
+            ...blocks,
             el('a', { class: 'back-link', href: '#/' }, '\u2190 Back to contents'),
         ));
     },
@@ -407,6 +474,7 @@ const App = {
                     while ((m = wordRe.exec(text)) !== null) {
                         const original = m[0];
                         const norm = original.toLowerCase().replace(/\u2019/g, "'");
+                        if (STOPWORDS.has(norm)) continue;
                         if (!map.has(norm)) map.set(norm, []);
                         map.get(norm).push({
                             setting: s,
@@ -449,7 +517,7 @@ const App = {
 
         mount(el('article', { class: 'index-page' },
             el('h1', null, 'Concordance'),
-            el('p', { class: 'subtitle' }, 'Every word in the psalter, with verse contexts.'),
+            el('p', { class: 'subtitle' }, 'Every word in the psalter, with verse contexts. Common function words are excluded.'),
             el('div', { class: 'alphabet-grid' }, ...links),
             el('a', { class: 'back-link', href: '#/' }, '\u2190 Back to contents'),
         ));
@@ -473,14 +541,14 @@ const App = {
             const items = occurrences.map(o => {
                 const abbr = abbreviateInContext(o);
                 return el('li', null,
-                    el('span', { class: 'cite' }, citation(o.setting) + (o.verse ? ':' + o.verse : '') + ' '),
-                    el('span', { class: 'ctx', html: abbr.html }),
-                    ' ',
                     el('a', {
-                        class: 'cite',
+                        class: 'occurrence',
                         href: settingUrl(o.setting, o.stanzaIdx + 1, new URLSearchParams()),
-                        title: 'Open stanza',
-                    }, '\u2197'),
+                    },
+                        el('span', { class: 'cite' }, citation(o.setting) + (o.verse ? ':' + o.verse : '')),
+                        ' ',
+                        el('span', { class: 'ctx', html: abbr.html }),
+                    ),
                 );
             });
             return el('section', { class: 'word-entry', id: 'w-' + w.replace(/[^a-z]/g, '-') },
@@ -531,8 +599,8 @@ function settingDesignator(setting) {
 
 // Compact citation used by the concordance and first-lines index, e.g.
 //   "Psalm 23"
-//   "Psalm 6(1st)"
-//   "Psalm 119(Aleph)"
+//   "Psalm 6 (1st)"
+//   "Psalm 119 (Aleph)"
 function citation(setting) {
     const sibs = App.byPsalm.get(setting.psalm);
     let suffix = '';
@@ -541,7 +609,7 @@ function citation(setting) {
         else if (setting.version) suffix = `(${ordinalSuffix(setting.version)})`;
         else if (setting.part)    suffix = `(Part ${setting.part})`;
     }
-    return `Psalm ${setting.psalm}${suffix}`;
+    return suffix ? `Psalm ${setting.psalm} ${suffix}` : `Psalm ${setting.psalm}`;
 }
 
 function firstLineOfSetting(s) {

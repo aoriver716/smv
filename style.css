@@ -198,30 +198,32 @@ main {
 
 .stanzas .stanza {
     margin: 0 0 1.25rem;
-    padding: 0.5rem 0.75rem;
-    border-left: 3px solid transparent;
-    border-radius: 4px;
-    transition: background 0.15s ease, border-color 0.15s ease;
-    cursor: pointer;
+    padding: 0.25rem 0.5rem 0.25rem 3em;
     display: block;
     color: inherit;
-}
-
-.stanzas .stanza:hover {
-    background: var(--selection);
-    border-left-color: var(--accent);
     text-decoration: none;
 }
 
-.stanzas .stanza .line { display: block; }
+.stanzas .stanza:hover { text-decoration: none; }
+.stanzas .stanza:hover .line {
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+}
+
+.stanzas .stanza .line { display: block; position: relative; }
 .stanzas .stanza .line.indent { padding-left: 1.5em; }
 .stanzas .stanza .verse {
+    position: absolute;
+    left: -2.5em;
+    width: 2em;
+    text-align: right;
     color: var(--muted);
-    font-size: 0.75em;
-    vertical-align: super;
-    margin-right: 0.15em;
-    font-family: var(--sans);
+    font-family: var(--serif);
+    font-size: 0.85em;
     font-variant-numeric: tabular-nums;
+    line-height: inherit;
 }
 
 .filter-note {
@@ -267,16 +269,22 @@ main {
     margin: 1.5rem 0 2.5rem;
     text-align: left;
     display: inline-block;
+    padding-left: 2em;
 }
 
-.stanza-view .stanza-body .line { display: block; }
+.stanza-view .stanza-body .line { display: block; position: relative; }
 .stanza-view .stanza-body .line.indent { padding-left: 1.8em; }
 .stanza-view .stanza-body .verse {
+    position: absolute;
+    left: -2em;
+    width: 1.5em;
+    text-align: right;
     color: var(--muted);
-    font-size: 0.5em;
-    vertical-align: super;
-    margin-right: 0.2em;
-    font-family: var(--sans);
+    font-family: var(--serif);
+    font-size: 0.55em;
+    font-variant-numeric: tabular-nums;
+    line-height: inherit;
+    top: 0.4em;
 }
 
 .stanza-nav {
@@ -329,17 +337,46 @@ main {
     margin: 0;
 }
 
-.meter-block li, .first-lines li {
+.meter-block li {
     padding: 0.2rem 0;
     display: flex;
     justify-content: space-between;
     gap: 1rem;
 }
 
+.meter-block .first-line {
+    font-family: var(--serif);
+    color: var(--muted);
+    font-style: italic;
+    text-align: right;
+}
+
+.first-lines .letter-separator {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    color: var(--accent);
+    margin: 1.75rem 0 0.25rem;
+    padding-bottom: 0.15rem;
+    border-bottom: 1px solid var(--rule);
+}
+
+.first-lines .letter-separator:first-child { margin-top: 0; }
+
 .first-lines li {
     border-bottom: 1px dotted var(--rule);
-    padding: 0.4rem 0;
+    padding: 0;
 }
+
+.first-lines .first-line-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.45rem 0;
+    color: inherit;
+    text-decoration: none;
+}
+
+.first-lines .first-line-row:hover { text-decoration: underline; }
 
 .first-lines .first-line {
     font-family: var(--serif);
@@ -434,8 +471,21 @@ main {
 
 .word-entry li {
     font-family: var(--serif);
-    padding: 0.15rem 0 0.15rem 1rem;
+    padding: 0;
+}
+
+.word-entry .occurrence {
+    display: block;
+    padding: 0.2rem 0.4rem 0.2rem 1rem;
     text-indent: -1rem;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.word-entry .occurrence:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
 }
 
 .word-entry .cite {

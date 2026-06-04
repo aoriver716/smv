@@ -12,8 +12,8 @@ const BOOKS = [
 const ALPHA = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
 // Words excluded from the concordance because they appear so often
-// that they swamp meaningful entries. Includes modern function words
-// and their archaic equivalents (thee/thou/hath/etc.).
+// that they swamp meaningful entries. Currently: articles, basic
+// conjunctions, prepositions, and auxiliary verbs (modern + archaic).
 const STOPWORDS = new Set([
     // Articles
     'a', 'an', 'the',
@@ -33,16 +33,6 @@ const STOPWORDS = new Set([
     'hath', 'hast',
     'doth', 'dost',
     'wilt', 'wert', 'art',
-    // Personal pronouns (modern)
-    'i', 'me', 'my', 'mine',
-    'we', 'us', 'our', 'ours',
-    'you', 'your', 'yours',
-    'he', 'him', 'his',
-    'she', 'her', 'hers',
-    'it', 'its',
-    'they', 'them', 'their', 'theirs',
-    // Personal pronouns (archaic)
-    'thee', 'thou', 'thy', 'thine', 'ye',
     // Demonstratives / determiners
     'that', 'this', 'these', 'those',
     // Relative / interrogative
@@ -51,11 +41,6 @@ const STOPWORDS = new Set([
     // Subordinating conjunctions / adverbs
     'if', 'then', 'than', 'because', 'though', 'although',
     'while', 'until', 'since', 'whether',
-    // Quantifiers / common adverbs
-    'not', 'no', 'all', 'any', 'some', 'both', 'such', 'same', 'other',
-    'more', 'most', 'less', 'much', 'many',
-    'very', 'just', 'only', 'also', 'too', 'ever', 'never',
-    'there', 'here', 'now',
 ]);
 
 // ------ DOM helpers ------
@@ -124,6 +109,7 @@ const App = {
     concordanceIndex: null,
 
     async boot() {
+        initTheme();
         try {
             const resp = await fetch('./psalter.json');
             if (!resp.ok) throw new Error('HTTP ' + resp.status);
@@ -135,6 +121,9 @@ const App = {
         this.preprocess();
         window.addEventListener('hashchange', () => this.render());
         window.addEventListener('keydown', e => this.onKey(e));
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) exitPresent();
+        });
         this.render();
     },
 
@@ -157,6 +146,12 @@ const App = {
     render() {
         const route = parseRoute();
         document.title = 'Scottish Metrical Psalter';
+        // Present mode only applies to stanza views; leave it if so, clear otherwise.
+        const inStanza = route.tokens[0] === 'psalm'
+            && route.tokens.some(t => /^s\d+$/.test(t));
+        if (!inStanza && document.body.classList.contains('presenting')) {
+            exitPresent();
+        }
         try {
             const head = route.tokens[0];
             if (!head)                    return this.renderHome();
@@ -176,6 +171,13 @@ const App = {
         const t = e.target;
         if (t && t.matches && t.matches('input,textarea,select,[contenteditable]')) return;
         if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+        // Esc in present mode exits presentation, not back-to-setting.
+        if (e.key === 'Escape' && document.body.classList.contains('presenting')) {
+            e.preventDefault();
+            exitPresent();
+            return;
+        }
 
         const route = parseRoute();
         if (route.tokens[0] !== 'psalm') return;
@@ -359,14 +361,25 @@ const App = {
             href: settingUrl(setting, null, params),
         }, '\u2191 Back to ' + crumbLabel);
 
+        const presentBtn = el('button', {
+            class: 'present-btn',
+            type: 'button',
+            onclick: () => enterPresent(),
+        }, 'Present \u26F6');
+
         mount(el('article', { class: 'stanza-view' },
             el('p', { class: 'crumbs' },
                 el('a', { href: settingUrl(setting, null, params) }, crumbLabel)),
             el('p', { class: 'stanza-num' }, `Stanza ${stanzaNum} of ${setting.stanzas.length}`),
-            el('div', null, el('div', { class: 'stanza-body' }, ...lineNodes)),
+            el('div', { class: 'stanza-body-wrap' },
+                el('div', { class: 'stanza-body' }, ...lineNodes)),
             el('nav', { class: 'stanza-nav' }, prevLink, nextLink),
+            presentBtn,
             back,
         ));
+        // Re-applying the same hash (e.g. navigating to the same stanza on
+        // re-render) preserves present mode; nothing else to do here.
+    },
     },
 
     // ---------- Indexes ----------
@@ -682,6 +695,85 @@ function abbreviateInContext(o) {
     return {
         html: escapeHtml(before) + '<em>' + escapeHtml(abbr) + '</em>' + escapeHtml(after),
     };
+}
+
+// ---------- Theme ----------
+
+const THEME_KEY = 'smv.theme';
+
+function applyTheme(value) {
+    const root = document.documentElement;
+    if (value === 'light' || value === 'dark') {
+        root.dataset.theme = value;
+    } else {
+        delete root.dataset.theme;
+    }
+}
+
+function initTheme() {
+    const saved = localStorage.getItem(THEME_KEY) || 'system';
+    applyTheme(saved);
+    const sel = document.getElementById('theme-select');
+    if (!sel) return;
+    sel.value = saved;
+    sel.addEventListener('change', () => {
+        const v = sel.value;
+        if (v === 'system') localStorage.removeItem(THEME_KEY);
+        else localStorage.setItem(THEME_KEY, v);
+        applyTheme(v);
+    });
+}
+
+// ---------- Present mode ----------
+
+const PRESENT_TUTORIAL_KEY = 'smv.presentTutorialDismissed';
+
+function enterPresent() {
+    const start = () => {
+        document.body.classList.add('presenting');
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(() => {});
+        }
+    };
+    if (localStorage.getItem(PRESENT_TUTORIAL_KEY) === '1') {
+        start();
+    } else {
+        showPresentTutorial(start);
+    }
+}
+
+function exitPresent() {
+    document.body.classList.remove('presenting');
+    if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+    }
+}
+
+function showPresentTutorial(onClose) {
+    const backdrop = el('div', { class: 'modal-backdrop', role: 'dialog', 'aria-modal': 'true' });
+    const dontShow = el('input', { type: 'checkbox', id: 'dont-show-tutorial' });
+    const dismiss = () => {
+        if (dontShow.checked) localStorage.setItem(PRESENT_TUTORIAL_KEY, '1');
+        document.body.removeChild(backdrop);
+        if (typeof onClose === 'function') onClose();
+    };
+    const okBtn = el('button', { type: 'button', onclick: dismiss }, 'Got it');
+    const modal = el('div', { class: 'modal' },
+        el('h2', null, 'Presentation mode'),
+        el('p', null, 'The stanza fills the screen for projection.'),
+        el('p', null,
+            el('kbd', null, '\u2190'), ' and ', el('kbd', null, '\u2192'),
+            ' move between stanzas. ',
+            el('kbd', null, 'Esc'), ' exits.'),
+        el('div', { class: 'modal-controls' },
+            el('label', { for: 'dont-show-tutorial' }, dontShow, ' Don\u2019t show this again'),
+            okBtn,
+        ),
+    );
+    backdrop.appendChild(modal);
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) dismiss(); });
+    document.body.appendChild(backdrop);
+    okBtn.focus();
 }
 
 // ---------- Boot ----------

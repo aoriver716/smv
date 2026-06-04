@@ -20,6 +20,24 @@
     }
 }
 
+/* Explicit theme override beats the prefers-color-scheme media query. */
+:root[data-theme="light"] {
+    --bg: #fdfcf8;
+    --fg: #1a1a1a;
+    --muted: #6a6a6a;
+    --accent: #6b4a1e;
+    --rule: #d8d2c4;
+    --selection: #eee0bf;
+}
+:root[data-theme="dark"] {
+    --bg: #181715;
+    --fg: #e8e4da;
+    --muted: #908a7d;
+    --accent: #d4a96a;
+    --rule: #38342d;
+    --selection: #3a3225;
+}
+
 * { box-sizing: border-box; }
 
 html, body {
@@ -500,3 +518,172 @@ main {
     font-weight: 600;
     color: var(--accent);
 }
+
+/* ------ Theme selector in header ------ */
+
+.theme-select {
+    margin-left: auto;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.2rem 0.4rem;
+}
+
+.theme-select:focus { outline: 1px solid var(--accent); }
+
+/* ------ Present button ------ */
+
+.present-btn {
+    display: inline-block;
+    margin: 0 0 1.5rem;
+    padding: 0.4rem 0.9rem;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.present-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* ------ Present mode ------ */
+
+body.presenting .site-header,
+body.presenting .site-footer,
+body.presenting .crumbs,
+body.presenting .stanza-num,
+body.presenting .stanza-nav,
+body.presenting .present-btn,
+body.presenting .back-to-setting {
+    display: none !important;
+}
+
+body.presenting { background: var(--bg); }
+
+body.presenting main {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+body.presenting .stanza-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+}
+
+body.presenting .stanza-view > :not(.stanza-body-wrap) { display: none; }
+
+body.presenting .stanza-body {
+    font-size: clamp(2rem, 6vw, 5rem);
+    line-height: 1.4;
+    padding-left: 0;
+    text-align: center;
+    max-width: 90vw;
+}
+
+body.presenting .stanza-body .line {
+    text-align: center;
+}
+
+body.presenting .stanza-body .line.indent {
+    padding-left: 0;
+}
+
+body.presenting .stanza-body .verse {
+    position: static;
+    width: auto;
+    margin-right: 0.4em;
+    font-size: 0.35em;
+    vertical-align: super;
+    color: var(--muted);
+}
+
+/* ------ Modal ------ */
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal {
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    max-width: 28rem;
+    width: calc(100% - 2rem);
+    padding: 1.5rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    font-family: var(--sans);
+}
+
+.modal h2 {
+    font-family: var(--serif);
+    margin: 0 0 0.75rem;
+    font-size: 1.3rem;
+}
+
+.modal p {
+    margin: 0 0 0.75rem;
+    line-height: 1.5;
+}
+
+.modal kbd {
+    font-family: var(--sans);
+    font-size: 0.85em;
+    background: var(--selection);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.05em 0.4em;
+    margin: 0 0.1em;
+    color: var(--fg);
+}
+
+.modal-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    font-size: 0.9rem;
+}
+
+.modal-controls label {
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+}
+
+.modal-controls button {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1.25rem;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.modal-controls button:hover { filter: brightness(1.1); }

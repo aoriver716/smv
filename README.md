@@ -91,12 +91,16 @@ All routes are hash-based, so the page never reloads:
 | `#/psalm/{n}/v{V}` | A specific version of a multi-version psalm. |
 | `#/psalm/{n}/p{P}` | A specific part (Psalm 119 only at present). |
 | `#/psalm/{n}/p{P}/v{V}` | A specific part *and* version (supported, even though no current setting uses both). |
-| `#/psalm/{n}/&hellip;/s{S}` | Zoomed view of a single stanza, with previous/next arrows (also bound to `<-`, `->`, `Esc`). |
+| `#/psalm/{n}/&hellip;/s{S}` | Zoomed view of a single stanza, with previous/next arrows (also bound to `<-`, `->`, `Esc`). A **Present** button enters full-screen presentation mode; arrow keys still navigate and `Esc` exits. |
 | `#/psalm/{n}/&hellip;?verses=1-3,5` | Filter to the given verses on either of the views above. |
 | `#/meters` | Index of meters (excluding Common Meter, which appears in every psalm). |
 | `#/first-lines` | Alphabetical index of first lines. |
 | `#/concordance` | Letter selector (A&ndash;Z). |
-| `#/concordance/{letter}` | Every word starting with that letter, each occurrence cited and shown in its line with the headword abbreviated. |
+| `#/concordance/{letter}` | Every word starting with that letter, each occurrence cited and shown in its line with the headword abbreviated. Articles, basic conjunctions/prepositions, and auxiliary verbs (incl. archaic forms) are excluded. |
+
+A theme selector (System / Light / Dark) is in the top-right of the header.
+The choice is remembered in `localStorage`; System (the default) follows
+your OS preference.
 
 ## Sources
 

@@ -380,7 +380,6 @@ const App = {
         // Re-applying the same hash (e.g. navigating to the same stanza on
         // re-render) preserves present mode; nothing else to do here.
     },
-    },
 
     // ---------- Indexes ----------
 

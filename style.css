@@ -67,7 +67,8 @@ a:hover { text-decoration: underline; }
     position: sticky;
     top: 0;
     background: var(--bg);
-    z-index: 10;
+    /* Above the mobile drawer (z:20) so the toggle button is always reachable. */
+    z-index: 30;
 }
 
 .site-title {

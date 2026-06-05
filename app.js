@@ -301,13 +301,7 @@ const App = {
             stanzaNodes.push(el('a', {
                 class: 'stanza',
                 href: settingUrl(setting, stanzaNum, params),
-                title: `Present stanza ${stanzaNum}`,
-                onclick: e => {
-                    // Plain left clicks open in present mode; let modified
-                    // clicks (new tab / window / download) keep default nav.
-                    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
-                    presentOnNextRender = true;
-                },
+                title: `Open stanza ${stanzaNum}`,
             }, ...lineNodes));
         }
 
@@ -327,7 +321,7 @@ const App = {
                 else location.hash = url;
             },
         }, 'Present \u26F6');
-        children.push(el('div', { class: 'stanza-actions' }, presentBtn, copyLinkButton()));
+        children.push(el('div', { class: 'stanza-actions' }, presentBtn, shareButton()));
 
         children.push(adjacentPsalmNav(setting.psalm, this.byPsalm));
 
@@ -386,6 +380,12 @@ const App = {
             href: settingUrl(setting, null, params),
         }, '\u2191 Back to ' + crumbLabel);
 
+        const presentBtn = el('button', {
+            type: 'button',
+            class: 'present-btn',
+            onclick: () => enterPresent(),
+        }, 'Present \u26F6');
+
         mount(el('article', { class: 'stanza-view' },
             el('p', { class: 'crumbs' },
                 el('a', { href: settingUrl(setting, null, params) }, crumbLabel)),
@@ -393,11 +393,11 @@ const App = {
             el('div', { class: 'stanza-body-wrap' },
                 el('div', { class: 'stanza-body' }, ...lineNodes)),
             el('nav', { class: 'stanza-nav' }, prevLink, nextLink),
-            el('div', { class: 'stanza-actions' }, copyLinkButton()),
+            el('div', { class: 'stanza-actions' }, presentBtn, shareButton()),
             back,
         ));
-        // If the user reached this stanza by clicking from the setting page
-        // (or the Present button), jump straight into present mode.
+        // The setting-page Present button navigates here and asks us to jump
+        // straight into present mode on arrival.
         if (presentOnNextRender) {
             presentOnNextRender = false;
             enterPresent();
@@ -1091,33 +1091,64 @@ function syncSearchInput(route) {
     if (clear) clear.hidden = !input.value.length;
 }
 
-// ---------- Copy link & psalm-nav helpers ----------
+// ---------- Share & psalm-nav helpers ----------
 
-function copyLinkButton() {
+const SHARE_ICON_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+    'aria-hidden="true">' +
+    '<path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/>' +
+    '<polyline points="16 6 12 2 8 6"/>' +
+    '<line x1="12" y1="2" x2="12" y2="15"/>' +
+    '</svg>';
+
+function shareButton() {
+    const label = el('span', { class: 'share-btn-label' }, 'Share');
     const btn = el('button', {
         type: 'button',
-        class: 'copy-link-btn',
-        title: 'Copy a link to this page',
-    }, 'Copy link');
-    btn.addEventListener('click', () => {
+        class: 'share-btn',
+        title: 'Share a link to this page',
+        'aria-label': 'Share',
+        html: SHARE_ICON_SVG,
+    });
+    btn.appendChild(label);
+
+    let resetTimer = null;
+    const flash = (text, cls) => {
+        if (resetTimer) clearTimeout(resetTimer);
+        label.textContent = text;
+        btn.classList.remove('copied', 'failed');
+        if (cls) btn.classList.add(cls);
+        resetTimer = setTimeout(() => {
+            label.textContent = 'Share';
+            btn.classList.remove('copied', 'failed');
+            resetTimer = null;
+        }, 1800);
+    };
+
+    btn.addEventListener('click', async () => {
         const url = location.href;
-        const restore = () => {
-            btn.textContent = 'Copy link';
-            btn.classList.remove('copied');
-        };
-        const ok = () => {
-            btn.textContent = 'Copied!';
-            btn.classList.add('copied');
-            setTimeout(restore, 1500);
-        };
+        const data = { title: document.title, url };
+
+        // Prefer the OS share sheet when available; fall back to clipboard.
+        if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
+            try {
+                await navigator.share(data);
+                return;
+            } catch (e) {
+                if (e && e.name === 'AbortError') return;
+                // Other share errors fall through to clipboard.
+            }
+        }
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(url).then(ok).catch(() => {
-                btn.textContent = 'Press Ctrl+C';
-                setTimeout(restore, 2000);
-            });
+            try {
+                await navigator.clipboard.writeText(url);
+                flash('Link copied', 'copied');
+            } catch {
+                flash('Press Ctrl+C', 'failed');
+            }
         } else {
-            btn.textContent = 'Press Ctrl+C';
-            setTimeout(restore, 2000);
+            flash('Press Ctrl+C', 'failed');
         }
     });
     return btn;
@@ -1367,16 +1398,6 @@ function exitPresent() {
     }
     if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
-    }
-    // If we're still sitting on a stanza route (i.e. exit was triggered by
-    // the user leaving fullscreen rather than by navigating elsewhere), drop
-    // the stanza segment so they land back on the setting page. Use replace
-    // so the in-between stanza URL isn't left in history.
-    const hash = location.hash || '';
-    const stanzaRe = /^#\/psalm\/\d+(?:\/p\d+)?(?:\/v\d+)?\/s\d+(\?.*)?$/;
-    if (stanzaRe.test(hash)) {
-        const back = hash.replace(/\/s\d+(?=$|\?)/, '');
-        location.replace(back);
     }
 }
 

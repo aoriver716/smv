@@ -668,7 +668,7 @@ body.presenting .stanza-num,
 body.presenting .stanza-nav,
 body.presenting .stanza-actions,
 body.presenting .present-btn,
-body.presenting .copy-link-btn,
+body.presenting .share-btn,
 body.presenting .back-to-setting {
     display: none !important;
 }
@@ -1077,10 +1077,12 @@ mark {
     border-radius: 2px;
 }
 
-/* ------ Copy-link button ------ */
+/* ------ Share button ------ */
 
-.copy-link-btn {
-    display: inline-block;
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     margin: 0 0 1rem;
     padding: 0.35rem 0.8rem;
     background: transparent;
@@ -1092,33 +1094,36 @@ mark {
     cursor: pointer;
 }
 
-.copy-link-btn:hover {
+.share-btn svg {
+    width: 0.95em;
+    height: 0.95em;
+    flex: none;
+}
+
+.share-btn:hover {
     color: var(--accent);
     border-color: var(--accent);
 }
 
-.copy-link-btn.copied {
+.share-btn.copied {
     color: var(--accent);
     border-color: var(--accent);
 }
 
-/* Stanza view aligns the Present + Copy buttons in a row. */
-.stanza-view .stanza-actions {
+.share-btn.failed {
+    color: var(--muted);
+}
+
+/* Lay the Present + Share buttons out in a centered row in both views. */
+.stanza-actions {
     display: flex;
     justify-content: center;
     gap: 0.6rem;
     margin: 0 0 1rem;
 }
-.stanza-view .stanza-actions .present-btn,
-.stanza-view .stanza-actions .copy-link-btn {
+.stanza-actions .present-btn,
+.stanza-actions .share-btn {
     margin: 0;
-}
-
-/* Setting view stacks the copy button under the stanzas. */
-.setting .copy-link-btn {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 /* ------ Adjacent-psalm nav ------ */
@@ -1162,7 +1167,7 @@ mark {
     .search-suggest,
     .theme-picker,
     .present-btn,
-    .copy-link-btn,
+    .share-btn,
     .stanza-actions,
     .psalm-nav,
     .stanza-nav,

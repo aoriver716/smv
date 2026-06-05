@@ -1,11 +1,5 @@
 # Scottish Metrical Psalter (1650)
 
-[![Deploy to GitHub Pages](https://github.com/aoriver716/smv/actions/workflows/pages.yml/badge.svg)](https://github.com/aoriver716/smv/actions/workflows/pages.yml)
-[![CI](https://github.com/aoriver716/smv/actions/workflows/ci.yml/badge.svg)](https://github.com/aoriver716/smv/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![No build step](https://img.shields.io/badge/build-none-success)](#run-the-web-app-locally)
-[![PWA](https://img.shields.io/badge/PWA-installable-5a0fc8)](#run-the-web-app-locally)
-
 The complete 1650 Scottish Metrical Psalter as structured JSON, paired with a
 no-build, browser-side single-page app that reads the JSON directly and
 renders it as a fully browsable, searchable, printable, projectable book.

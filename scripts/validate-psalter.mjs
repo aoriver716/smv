@@ -1,7 +1,7 @@
 // Validate psalter.json against psalter.schema.json using Ajv.
 // Exits non-zero on validation failure.
 import { readFileSync } from 'node:fs';
-import Ajv from 'ajv';
+import Ajv from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 
 const schema = JSON.parse(readFileSync(new URL('../psalter.schema.json', import.meta.url), 'utf8'));

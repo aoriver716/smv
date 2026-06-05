@@ -1230,9 +1230,41 @@ function initTheme() {
 
 const PRESENT_TUTORIAL_KEY = 'smv.presentTutorialDismissed';
 
+let presentControls = null;
+
+function clickStanzaLink(selector) {
+    const a = document.querySelector(selector);
+    if (a) a.click();
+}
+
+function ensurePresentControls() {
+    if (presentControls) return presentControls;
+    const prev = el('button', {
+        type: 'button',
+        class: 'present-tap-zone prev',
+        'aria-label': 'Previous stanza',
+        onclick: e => { e.preventDefault(); clickStanzaLink('a.prev-stanza:not(.disabled)'); },
+    });
+    const next = el('button', {
+        type: 'button',
+        class: 'present-tap-zone next',
+        'aria-label': 'Next stanza',
+        onclick: e => { e.preventDefault(); clickStanzaLink('a.next-stanza:not(.disabled)'); },
+    });
+    const exit = el('button', {
+        type: 'button',
+        class: 'present-exit',
+        'aria-label': 'Exit presentation mode',
+        onclick: e => { e.preventDefault(); exitPresent(); },
+    }, '\u00d7');
+    presentControls = el('div', { class: 'present-controls' }, prev, next, exit);
+    return presentControls;
+}
+
 function enterPresent() {
     const start = () => {
         document.body.classList.add('presenting');
+        document.body.appendChild(ensurePresentControls());
         if (document.documentElement.requestFullscreen) {
             document.documentElement.requestFullscreen().catch(() => {});
         }
@@ -1246,6 +1278,9 @@ function enterPresent() {
 
 function exitPresent() {
     document.body.classList.remove('presenting');
+    if (presentControls && presentControls.parentNode) {
+        presentControls.parentNode.removeChild(presentControls);
+    }
     if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
     }
@@ -1264,9 +1299,14 @@ function showPresentTutorial(onClose) {
         el('h2', null, 'Presentation mode'),
         el('p', null, 'The stanza fills the screen for projection.'),
         el('p', null,
+            'Keyboard: ',
             el('kbd', null, '\u2190'), ' and ', el('kbd', null, '\u2192'),
-            ' move between stanzas. ',
+            ' move between stanzas, ',
             el('kbd', null, 'Esc'), ' exits.'),
+        el('p', null,
+            'Touch: tap the left or right side of the screen to move between stanzas, tap ',
+            el('span', { class: 'inline-glyph', 'aria-hidden': 'true' }, '\u00d7'),
+            ' in the top corner to exit.'),
         el('div', { class: 'modal-controls' },
             el('label', { for: 'dont-show-tutorial' }, dontShow, ' Don\u2019t show this again'),
             okBtn,

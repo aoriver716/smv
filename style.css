@@ -719,6 +719,67 @@ body.presenting .stanza-body .verse {
     color: var(--muted);
 }
 
+/* ------ Present-mode tap zones & exit button ------ */
+
+/* Hidden by default; only inserted into the DOM while presenting, but the
+   rule guards against any stray visibility outside present mode. */
+.present-controls { display: none; }
+
+body.presenting .present-controls { display: block; }
+
+.present-tap-zone {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    z-index: 50;
+    /* Suppress mobile long-press menus, text selection, and the iOS tap
+       highlight so the zones behave like slide-deck hit targets. */
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+}
+.present-tap-zone.prev { left: 0; }
+.present-tap-zone.next { right: 0; }
+.present-tap-zone:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -6px;
+}
+
+.present-exit {
+    position: fixed;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 51;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rule);
+    color: var(--fg);
+    border: none;
+    border-radius: 999px;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.55;
+    transition: opacity 150ms ease;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.present-exit:hover,
+.present-exit:focus-visible {
+    opacity: 1;
+    outline: none;
+}
+
 /* ------ Modal ------ */
 
 .modal-backdrop {

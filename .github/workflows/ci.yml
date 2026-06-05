@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Syntax-check JS
+        run: |
+          node --check app.js
+          node --check sw.js
+
+      - name: Parse manifest and psalter.json
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('psalter.json','utf8'))"
+
+      - name: Validate psalter.json against schema
+        run: |
+          npm install --silent --no-save ajv@8 ajv-formats@3
+          node scripts/validate-psalter.mjs
+
+      - name: Lint service-worker cache version
+        shell: pwsh
+        run: |
+          # If any cached asset changed in this PR but sw.js VERSION did not, warn.
+          $assets = @('index.html','app.js','style.css','psalter.json','manifest.webmanifest','icon.svg')
+          $base = if ($env:GITHUB_BASE_REF) { "origin/$env:GITHUB_BASE_REF" } else { 'HEAD~1' }
+          try { git fetch --no-tags --depth=2 origin $env:GITHUB_BASE_REF 2>$null } catch {}
+          $changed = git diff --name-only "$base"...HEAD 2>$null
+          if (-not $changed) { exit 0 }
+          $assetChanged = $changed | Where-Object { $assets -contains $_ }
+          $swChanged    = $changed -contains 'sw.js'
+          if ($assetChanged -and -not $swChanged) {
+            Write-Host "::warning::Cached assets changed but sw.js VERSION was not bumped: $($assetChanged -join ', ')"
+          }

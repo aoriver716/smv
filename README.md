@@ -1,8 +1,14 @@
 # Scottish Metrical Psalter (1650)
 
-The complete 1650 Scottish Metrical Psalter as structured JSON, with a small
-PowerShell script that renders it into a printable Markdown book and a
-browser-side single-page app that reads the JSON directly.
+[![Deploy to GitHub Pages](https://github.com/aoriver716/smv/actions/workflows/pages.yml/badge.svg)](https://github.com/aoriver716/smv/actions/workflows/pages.yml)
+[![CI](https://github.com/aoriver716/smv/actions/workflows/ci.yml/badge.svg)](https://github.com/aoriver716/smv/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![No build step](https://img.shields.io/badge/build-none-success)](#run-the-web-app-locally)
+[![PWA](https://img.shields.io/badge/PWA-installable-5a0fc8)](#run-the-web-app-locally)
+
+The complete 1650 Scottish Metrical Psalter as structured JSON, paired with a
+no-build, browser-side single-page app that reads the JSON directly and
+renders it as a fully browsable, searchable, printable, projectable book.
 
 ## Browse online
 
@@ -19,9 +25,9 @@ concordance, all from the same data file.
 | File | What it is |
 |------|------------|
 | [`psalter.json`](psalter.json) | The complete psalter as JSON &mdash; the source of truth. One entry per *setting* (a psalm has one or more settings to accommodate alternate versions or parts). |
-| [`build-psalter.ps1`](build-psalter.ps1) | Renders `psalter.json` into [`psalter.md`](psalter.md). |
-| [`psalter.md`](psalter.md) | Generated output: the full psalter as Markdown with a table of contents and one page per psalm. |
+| [`psalter.schema.json`](psalter.schema.json) | JSON Schema for `psalter.json`. Editors that respect `$schema` will lint and complete the data automatically. |
 | [`index.html`](index.html), [`app.js`](app.js), [`style.css`](style.css) | The browser app. Static files, no build step, no framework. |
+| [`manifest.webmanifest`](manifest.webmanifest), [`sw.js`](sw.js), [`icon.svg`](icon.svg) | PWA manifest, service worker (offline cache), and app icon. |
 
 ## Data shape
 
@@ -52,19 +58,6 @@ A **setting** is one renderable version of a psalm:
 - Line objects have a `text` field (a leading tab `\t` marks an indented line) and an optional `verse` field giving the verse number this line starts.
 - Multi-version psalms (e.g. Psalm 6) appear as multiple settings with a `version` field.
 - Psalm 119's 22 parts each appear as their own setting with `part` and `heading` (Aleph, Beth, &hellip;, Tau) fields.
-
-## Rebuild the Markdown
-
-```powershell
-.\build-psalter.ps1
-```
-
-The script:
-
-- groups settings by psalm,
-- emits a table of contents partitioned into the five traditional books of the Psalter (Psalms 1&ndash;41, 42&ndash;72, 73&ndash;89, 90&ndash;106, 107&ndash;150),
-- renders one page per psalm using a CSS `page-break-after` div, with the inscription italicised at the top and each version or part underneath with its meter and stanzas,
-- appends a "Back to Top" link at the end of every psalm.
 
 ## Run the web app locally
 

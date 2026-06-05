@@ -1,0 +1,59 @@
+name: Text correction
+description: Report a typo, punctuation, or transcription error in a psalm.
+title: "Text: Psalm  — "
+labels: ["text-correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping keep the text accurate. Please cite a source for the
+        correction (the Free Church of Scotland *Words Only* PDF is the primary
+        reference — see the README).
+  - type: input
+    id: psalm
+    attributes:
+      label: Psalm
+      placeholder: "e.g. 23"
+    validations:
+      required: true
+  - type: input
+    id: setting
+    attributes:
+      label: Version / Part
+      description: Only fill in if the psalm has multiple versions (e.g. Psalm 6) or parts (Psalm 119).
+      placeholder: "e.g. v2, or p3 (Gimel)"
+  - type: input
+    id: verse
+    attributes:
+      label: Verse / stanza / line
+      placeholder: "e.g. verse 4, stanza 2, line 3"
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current text
+      description: Quote the line(s) exactly as they appear today.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed text
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: URL or citation supporting the correction.
+      placeholder: "e.g. Free Church Words Only PDF, p. 12"
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything else worth knowing (e.g. punctuation convention, archaic spelling).

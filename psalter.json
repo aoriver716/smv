@@ -1,4 +1,5 @@
 {
+  "$schema": "./psalter.schema.json",
   "settings": [
     {
       "psalm": 1,

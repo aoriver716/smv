@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aoriver716.github.io/smv/psalter.schema.json",
+  "title": "Scottish Metrical Psalter",
+  "description": "The 1650 Scottish Metrical Psalter as a list of renderable settings.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["settings"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "settings": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/setting" }
+    }
+  },
+  "$defs": {
+    "setting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["psalm", "meter", "stanzas"],
+      "properties": {
+        "psalm": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 150,
+          "description": "Psalm number (1-150)."
+        },
+        "meter": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Metrical pattern. Common values: C.M., L.M., S.M., 8.7.8.7, 6.6.6.6.8.8, 6.6.6.6.D, 10.10.10.10.10."
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Discriminator when a psalm has multiple metrical versions."
+        },
+        "part": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 22,
+          "description": "Part number (currently Psalm 119 only, Aleph through Tau)."
+        },
+        "heading": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Hebrew-letter heading for a Psalm 119 part."
+        },
+        "inscription": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Biblical superscription when present (e.g. 'A Psalm of David.')."
+        },
+        "stanzas": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Each inner array is one stanza; each element is one line.",
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/$defs/line" }
+          }
+        }
+      }
+    },
+    "line": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Line text. Leading tab characters (\\t) mark indentation levels."
+        },
+        "verse": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Verse number this line starts, when present."
+        }
+      }
+    }
+  }
+}

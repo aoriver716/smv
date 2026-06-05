@@ -12,7 +12,7 @@
         ],
         [
           { "text": "Nor sitteth in the scorner’s chair:" },
-          { "verse": 2, "text": "But placeth his delight" },
+          { "verse": 2, "text": "\tBut placeth his delight" },
           { "text": "Upon GOD’s law, and meditates" },
           { "text": "\ton his law day and night." }
         ],
@@ -24,7 +24,7 @@
         ],
         [
           { "text": "And all he doth shall prosper well." },
-          { "verse": 4, "text": "The wicked are not so;" },
+          { "verse": 4, "text": "\tThe wicked are not so;" },
           { "text": "But like they are unto the chaff," },
           { "text": "\twhich wind drives to and fro." }
         ],
@@ -209,11 +209,11 @@
           { "verse": 4, "text": "For thou art not a God that doth" },
           { "text": "\tin wickedness delight;" },
           { "text": "Neither shall evil dwell with thee," },
-          { "verse": 5, "text": "nor fools stand in thy sight." }
+          { "verse": 5, "text": "\tnor fools stand in thy sight." }
         ],
         [
           { "text": "All that ill-doers are thou hat’st;" },
-          { "verse": 6, "text": "cutt’st off that liars be:" },
+          { "verse": 6, "text": "\tcutt’st off that liars be:" },
           { "text": "The bloody and deceitful man" },
           { "text": "\tabhorrèd is by thee." }
         ],
@@ -755,7 +755,7 @@
         ],
         [
           { "text": "His eyes do see, his eyelids try" },
-          { "verse": 5, "text": "men’s sons. The just he proves:" },
+          { "verse": 5, "text": "\tmen’s sons. The just he proves:" },
           { "text": "But his soul hates the wicked man," },
           { "text": "\tand him that vi’lence loves." }
         ],
@@ -946,7 +946,7 @@
       "stanzas": [
         [
           { "verse": 1, "text": "Lord, keep me; for I trust in thee." },
-          { "verse": 2, "text": "To GOD thus was my speech," },
+          { "verse": 2, "text": "\tTo GOD thus was my speech," },
           { "text": "Thou art my Lord; and unto thee" },
           { "text": "\tmy goodness doth not reach:" }
         ],
@@ -1104,7 +1104,7 @@
       "stanzas": [
         [
           { "verse": 1, "text": "Thee will I love, O LORD, my strength." },
-          { "verse": 2, "text": "My fortress is the LORD," },
+          { "verse": 2, "text": "\tMy fortress is the LORD," },
           { "text": "My rock, and he that doth to me" },
           { "text": "\tdeliverance afford:" }
         ],
@@ -1375,7 +1375,7 @@
         ],
         [
           { "text": "In them he set the sun a tent;" },
-          { "verse": 5, "text": "Who, bridegroom-like, forth goes" },
+          { "verse": 5, "text": "\tWho, bridegroom-like, forth goes" },
           { "text": "From’s chamber, as a strong man doth" },
           { "text": "\tto run his race rejoice." }
         ],
@@ -1739,7 +1739,7 @@
       "stanzas": [
         [
           { "verse": 1, "text": "The LORD’s my shepherd, I’ll not want." },
-          { "verse": 2, "text": "He makes me down to lie" },
+          { "verse": 2, "text": "\tHe makes me down to lie" },
           { "text": "In pastures green: he leadeth me" },
           { "text": "\tthe quiet waters by." }
         ],
@@ -1843,7 +1843,7 @@
       "stanzas": [
         [
           { "verse": 1, "text": "To thee I lift my soul:" },
-          { "verse": 2, "text": "O LORD, I trust in thee:" },
+          { "verse": 2, "text": "\tO LORD, I trust in thee:" },
           { "text": "My God, let me not be asham’d," },
           { "text": "\tnor foes triumph o’er me." }
         ],
@@ -1959,7 +1959,7 @@
       "stanzas": [
         [
           { "verse": 1, "text": "To thee I lift my soul, O LORD:" },
-          { "verse": 2, "text": "my God, I trust in thee:" },
+          { "verse": 2, "text": "\tmy God, I trust in thee:" },
           { "text": "Let me not be ashamed; let not" },
           { "text": "\tmy foes triumph o’er me." }
         ],
@@ -1971,7 +1971,7 @@
         ],
         [
           { "verse": 4, "text": "Thy ways, LORD, show; teach me thy paths:" },
-          { "verse": 5, "text": "lead me in truth, teach me:" },
+          { "verse": 5, "text": "\tlead me in truth, teach me:" },
           { "text": "For of my safety thou art God;" },
           { "text": "\tall day I wait on thee." }
         ],
@@ -2275,7 +2275,7 @@
         ],
         [
           { "text": "\tAnd with my song I will him praise." },
-          { "verse": 8, "text": "Their strength is GOD alone:" },
+          { "verse": 8, "text": "\t\t\tTheir strength is GOD alone:" },
           { "text": "\tHe also is the saving strength" },
           { "text": "\t\t\tof his anointed one." }
         ],
@@ -2330,7 +2330,7 @@
         ],
         [
           { "verse": 7, "text": "God’s voice divides the flames of fire;" },
-          { "verse": 8, "text": "the desert it doth shake:" },
+          { "verse": 8, "text": "\tthe desert it doth shake:" },
           { "text": "The LORD doth make the wilderness" },
           { "text": "\tof Kadesh all to quake." }
         ],
@@ -2409,7 +2409,7 @@
         ],
         [
           { "verse": 10, "text": "Hear, LORD, have mercy; help me, LORD:" },
-          { "verse": 11, "text": "Thou turnèd hast my sadness" },
+          { "verse": 11, "text": "\tThou turnèd hast my sadness" },
           { "text": "To dancing; yea, my sackcloth loosed," },
           { "text": "\tand girded me with gladness;" }
         ],
@@ -2494,7 +2494,7 @@
         ],
         [
           { "text": "When they me saw they from me fled." },
-          { "verse": 12, "text": "Ev’n so I am forgot," },
+          { "verse": 12, "text": "\tEv’n so I am forgot," },
           { "text": "As men are out of mind when dead:" },
           { "text": "\tI’m like a broken pot." }
         ],
@@ -2912,7 +2912,7 @@
         [
           { "verse": 9, "text": "My soul in GOD shall joy; and glad" },
           { "text": "\t\t\tin his salvation be:" },
-          { "verse": 10, "text": "And all my bones shall say, O LORD," },
+          { "verse": 10, "text": "\tAnd all my bones shall say, O LORD," },
           { "text": "\t\t\twho is like unto thee," }
         ],
         [
@@ -2924,7 +2924,7 @@
         [
           { "verse": 11, "text": "False witnesses rose; to my charge" },
           { "text": "\t\t\tthings I not knew they laid." },
-          { "verse": 12, "text": "They, to the spoiling of my soul," },
+          { "verse": 12, "text": "\tThey, to the spoiling of my soul," },
           { "text": "\t\t\tme ill for good repaid." }
         ],
         [
@@ -2948,7 +2948,7 @@
         [
           { "text": "\tI knew it not; they did me tear," },
           { "text": "\t\t\tand quiet would not be." },
-          { "verse": 16, "text": "With mocking hypocrites, at feasts" },
+          { "verse": 16, "text": "\tWith mocking hypocrites, at feasts" },
           { "text": "\t\t\tthey gnashed their teeth at me." }
         ],
         [
@@ -2978,7 +2978,7 @@
         [
           { "verse": 21, "text": "With mouths set wide, they ’gainst me said," },
           { "text": "\t\t\tHa, ha! our eye doth see." },
-          { "verse": 22, "text": "LORD, thou hast seen, hold not thy peace;" },
+          { "verse": 22, "text": "\tLORD, thou hast seen, hold not thy peace;" },
           { "text": "\t\t\tLord, be not far from me." }
         ],
         [
@@ -3056,7 +3056,7 @@
         ],
         [
           { "text": "LORD, thou preservest man and beast." },
-          { "verse": 7, "text": "How precious is thy grace!" },
+          { "verse": 7, "text": "\tHow precious is thy grace!" },
           { "text": "Therefore in shadow of thy wings" },
           { "text": "\tmen’s sons their trust shall place." }
         ],
@@ -3117,7 +3117,7 @@
         [
           { "verse": 4, "text": "Delight thyself in GOD; he’ll give" },
           { "text": "\t\t\tthine heart’s desire to thee." },
-          { "verse": 5, "text": "Thy way to GOD commit, him trust," },
+          { "verse": 5, "text": "\tThy way to GOD commit, him trust," },
           { "text": "\t\t\tit bring to pass shall he." }
         ],
         [
@@ -3159,7 +3159,7 @@
         [
           { "verse": 12, "text": "The wicked plots against the just," },
           { "text": "\t\t\tand at him whets his teeth:" },
-          { "verse": 13, "text": "The Lord shall laugh at him, because" },
+          { "verse": 13, "text": "\tThe Lord shall laugh at him, because" },
           { "text": "\t\t\this day he coming seeth." }
         ],
         [
@@ -3185,7 +3185,7 @@
         [
           { "verse": 17, "text": "For sinners’ arms shall broken be;" },
           { "text": "\t\t\tbut GOD the just sustains." },
-          { "verse": 18, "text": "GOD knows the just man’s days, and still" },
+          { "verse": 18, "text": "\tGOD knows the just man’s days, and still" },
           { "text": "\t\t\ttheir heritage remains." }
         ],
         [
@@ -3233,7 +3233,7 @@
         [
           { "verse": 26, "text": "He’s ever merciful, and lends:" },
           { "text": "\t\t\this seed is blessed therefore." },
-          { "verse": 27, "text": "Depart from evil, and do good," },
+          { "verse": 27, "text": "\tDepart from evil, and do good," },
           { "text": "\t\t\tand dwell for evermore." }
         ],
         [
@@ -3245,13 +3245,13 @@
         [
           { "verse": 29, "text": "The just inherit shall the land," },
           { "text": "\t\t\tand ever in it dwell:" },
-          { "verse": 30, "text": "The just man’s mouth doth wisdom speak;" },
+          { "verse": 30, "text": "\tThe just man’s mouth doth wisdom speak;" },
           { "text": "\t\t\this tongue doth judgment tell." }
         ],
         [
           { "verse": 31, "text": "In ’s heart the law is of his God," },
           { "text": "\t\t\this steps slide not away." },
-          { "verse": 32, "text": "The wicked man doth watch the just," },
+          { "verse": 32, "text": "\tThe wicked man doth watch the just," },
           { "text": "\t\t\tand seeketh him to slay." }
         ],
         [
@@ -3269,7 +3269,7 @@
         [
           { "verse": 35, "text": "I saw the wicked great in power," },
           { "text": "\t\t\tspread like a green bay-tree:" },
-          { "verse": 36, "text": "He passed, yea, was not; him I sought," },
+          { "verse": 36, "text": "\tHe passed, yea, was not; him I sought," },
           { "text": "\t\t\tbut found he could not be." }
         ],
         [
@@ -3839,7 +3839,7 @@
         [
           { "verse": 4, "text": "Thou art my King: for Jacob, Lord," },
           { "text": "\t\t\tdeliv’rances command." },
-          { "verse": 5, "text": "Through thee we shall push down our foes," },
+          { "verse": 5, "text": "\tThrough thee we shall push down our foes," },
           { "text": "\t\t\tthat do against us stand:" }
         ],
         [
@@ -3852,7 +3852,7 @@
         [
           { "verse": 7, "text": "But from our foes thou hast us saved," },
           { "text": "\t\t\tour haters put to shame." },
-          { "verse": 8, "text": "In God we all the day do boast," },
+          { "verse": 8, "text": "\tIn God we all the day do boast," },
           { "text": "\t\t\tand ever praise thy name." }
         ],
         [
@@ -3870,7 +3870,7 @@
         [
           { "verse": 11, "text": "Like sheep for meat thou gavest us;" },
           { "text": "\t\t\t’mong heathen cast we be." },
-          { "verse": 12, "text": "Thou didst for nought thy people sell;" },
+          { "verse": 12, "text": "\tThou didst for nought thy people sell;" },
           { "text": "\t\t\ttheir price enriched not thee." }
         ],
         [
@@ -3906,31 +3906,31 @@
         [
           { "verse": 18, "text": "Back from thy way our heart not turned;" },
           { "text": "\t\t\tour steps no straying made;" },
-          { "verse": 19, "text": "Though us thou brak’st in dragons’ place," },
+          { "verse": 19, "text": "\tThough us thou brak’st in dragons’ place," },
           { "text": "\t\t\tand cover’dst with death’s shade." }
         ],
         [
           { "verse": 20, "text": "If we God’s name forgot, or stretched" },
           { "text": "\t\t\tto a strange god our hands," },
-          { "verse": 21, "text": "Shall not God search this out? for he" },
+          { "verse": 21, "text": "\tShall not God search this out? for he" },
           { "text": "\t\t\theart’s secrets understands." }
         ],
         [
           { "verse": 22, "text": "Yea, for thy sake we’re killed all day," },
           { "text": "\t\t\tcounted as slaughter-sheep." },
-          { "verse": 23, "text": "Rise, Lord, cast us not ever off;" },
+          { "verse": 23, "text": "\tRise, Lord, cast us not ever off;" },
           { "text": "\t\t\tawake, why dost thou sleep?" }
         ],
         [
           { "verse": 24, "text": "O wherefore hidest thou thy face?" },
           { "text": "\t\t\tforgett’st our cause distressed," },
-          { "verse": 25, "text": "And our oppression? For our soul" },
+          { "verse": 25, "text": "\tAnd our oppression? For our soul" },
           { "text": "\t\t\tis to the dust down pressed:" }
         ],
         [
           { "text": "\tOur belly also on the earth" },
           { "text": "\t\t\tfast cleaving, hold doth take." },
-          { "verse": 26, "text": "Rise for our help, and us redeem," },
+          { "verse": 26, "text": "\tRise for our help, and us redeem," },
           { "text": "\t\t\tev’n for thy mercies’ sake." }
         ]
       ]
@@ -4174,7 +4174,7 @@
         ],
         [
           { "text": "Though hills amidst the seas be cast;" },
-          { "verse": 3, "text": "Though waters roaring make," },
+          { "verse": 3, "text": "\tThough waters roaring make," },
           { "text": "And troubled be; yea, though the hills" },
           { "text": "\tby swelling seas do shake." }
         ],
@@ -4297,7 +4297,7 @@
         [
           { "verse": 3, "text": "The Lord within her palaces" },
           { "text": "\t\t\tis for a refuge known." },
-          { "verse": 4, "text": "For, lo, the kings that gathered were" },
+          { "verse": 4, "text": "\tFor, lo, the kings that gathered were" },
           { "text": "\t\t\ttogether, by have gone." }
         ],
         [
@@ -4322,7 +4322,7 @@
         [
           { "text": "\tIn our God’s city, which his hand" },
           { "text": "\t\t\tfor ever stablish will." },
-          { "verse": 9, "text": "We of thy loving-kindness thought," },
+          { "verse": 9, "text": "\tWe of thy loving-kindness thought," },
           { "text": "\t\t\tLord, in thy temple still." }
         ],
         [
@@ -4340,12 +4340,12 @@
         [
           { "verse": 12, "text": "Walk about Zion, and go round;" },
           { "text": "\t\t\tthe high tow’rs thereof tell:" },
-          { "verse": 13, "text": "Consider ye her palaces," },
+          { "verse": 13, "text": "\tConsider ye her palaces," },
           { "text": "\t\t\tand mark her bulwarks well;" }
         ],
         [
           { "text": "\tThat ye may tell posterity." },
-          { "verse": 14, "text": "For this God doth abide" },
+          { "verse": 14, "text": "\t\t\tFor this God doth abide" },
           { "text": "\tOur God for evermore; he will" },
           { "text": "\t\t\tev’n unto death us guide." }
         ]
@@ -4360,11 +4360,11 @@
           { "verse": 1, "text": "Hear this, all people, and give ear," },
           { "text": "\tall in the world that dwell;" },
           { "verse": 2, "text": "Both low and high, both rich and poor." },
-          { "verse": 3, "text": "My mouth shall wisdom tell;" }
+          { "verse": 3, "text": "\tMy mouth shall wisdom tell;" }
         ],
         [
           { "text": "My heart shall knowledge meditate." },
-          { "verse": 4, "text": "I will incline mine ear" },
+          { "verse": 4, "text": "\tI will incline mine ear" },
           { "text": "To parables, and on the harp" },
           { "text": "\tmy sayings dark declare." }
         ],
@@ -4511,7 +4511,7 @@
         [
           { "verse": 9, "text": "I’ll take no calf nor goats" },
           { "text": "\t\t\tfrom house or fold of thine:" },
-          { "verse": 10, "text": "For beasts of forest, cattle all" },
+          { "verse": 10, "text": "\tFor beasts of forest, cattle all" },
           { "text": "\t\t\ton thousand hills, are mine." }
         ],
         [
@@ -4529,7 +4529,7 @@
         [
           { "verse": 13, "text": "Will I eat flesh of bulls?" },
           { "text": "\t\t\tor goats’ blood drink will I?" },
-          { "verse": 14, "text": "Thanks offer thou to God, and pay" },
+          { "verse": 14, "text": "\tThanks offer thou to God, and pay" },
           { "text": "\t\t\tthy vows to the Most High." }
         ],
         [
@@ -4541,7 +4541,7 @@
         [
           { "verse": 16, "text": "But to the wicked man" },
           { "text": "\t\t\tGod saith, My laws and truth" },
-          { "text": "Should’st thou declare? how dar’st thou take" },
+          { "text": "\tShould’st thou declare? how dar’st thou take" },
           { "text": "\t\t\tmy cov’nant in thy mouth?" }
         ],
         [
@@ -4559,7 +4559,7 @@
         [
           { "verse": 19, "text": "Thou giv’st thy mouth to ill," },
           { "text": "\t\t\tthy tongue deceit doth frame;" },
-          { "verse": 20, "text": "Thou sitt’st, and ’gainst thy brother speak’st," },
+          { "verse": 20, "text": "\tThou sitt’st, and ’gainst thy brother speak’st," },
           { "text": "\t\t\tthy mother’s son dost shame." }
         ],
         [
@@ -5051,7 +5051,7 @@
         ],
         [
           { "verse": 16, "text": "I’ll call on God: GOD will me save." },
-          { "verse": 17, "text": "I’ll pray, and make a noise" },
+          { "verse": 17, "text": "\tI’ll pray, and make a noise" },
           { "text": "At ev’ning, morning, and at noon;" },
           { "text": "\tand he shall hear my voice." }
         ],
@@ -5118,7 +5118,7 @@
         ],
         [
           { "verse": 3, "text": "When I’m afraid I’ll trust in thee:" },
-          { "verse": 4, "text": "In God I’ll praise his word;" },
+          { "verse": 4, "text": "\t\t\tIn God I’ll praise his word;" },
           { "text": "\tI will not fear what flesh can do," },
           { "text": "\t\t\tmy trust is in the Lord." }
         ],
@@ -5144,13 +5144,13 @@
         [
           { "verse": 9, "text": "My foes shall, when I cry, turn back;" },
           { "text": "\t\t\tI know ’t, God is for me." },
-          { "verse": 10, "text": "In God his word I’ll praise; his word" },
+          { "verse": 10, "text": "\tIn God his word I’ll praise; his word" },
           { "text": "\t\t\tin GOD shall praisèd be." }
         ],
         [
           { "verse": 11, "text": "In God I trust; I will not fear" },
           { "text": "\t\t\twhat man can do to me." },
-          { "verse": 12, "text": "Thy vows upon me are, O God:" },
+          { "verse": 12, "text": "\tThy vows upon me are, O God:" },
           { "text": "\t\t\tI’ll render praise to thee." }
         ],
         [
@@ -5212,13 +5212,13 @@
         [
           { "verse": 7, "text": "My heart is fixed, my heart is fixed," },
           { "text": "\t\t\tO God; I’ll sing and praise." },
-          { "verse": 8, "text": "My glory wake; wake psalt’ry, harp;" },
+          { "verse": 8, "text": "\tMy glory wake; wake psalt’ry, harp;" },
           { "text": "\t\t\tmyself I’ll early raise." }
         ],
         [
           { "verse": 9, "text": "I’ll praise thee ’mong the people, Lord;" },
           { "text": "\t\t\t’mong nations sing will I:" },
-          { "verse": 10, "text": "For great to heav’n thy mercy is," },
+          { "verse": 10, "text": "\tFor great to heav’n thy mercy is," },
           { "text": "\t\t\tthy truth is to the sky." }
         ],
         [
@@ -5821,7 +5821,7 @@
         [
           { "verse": 1, "text": "All lands to God, in joyful sounds," },
           { "text": "\t\t\taloft your voices raise." },
-          { "verse": 2, "text": "Sing forth the honour of his name," },
+          { "verse": 2, "text": "\tSing forth the honour of his name," },
           { "text": "\t\t\tand glorious make his praise." }
         ],
         [
@@ -5858,13 +5858,13 @@
         [
           { "verse": 8, "text": "Ye people, bless our God; aloud" },
           { "text": "\t\t\tthe voice speak of his praise:" },
-          { "verse": 9, "text": "Our soul in life who safe preserves," },
+          { "verse": 9, "text": "\tOur soul in life who safe preserves," },
           { "text": "\t\t\tour foot from sliding stays." }
         ],
         [
           { "verse": 10, "text": "For thou didst prove and try us, Lord," },
           { "text": "\t\t\tas men do silver try;" },
-          { "verse": 11, "text": "Brought’st us into the net, and mad’st" },
+          { "verse": 11, "text": "\tBrought’st us into the net, and mad’st" },
           { "text": "\t\t\tbands on our loins to lie." }
         ],
         [
@@ -5876,7 +5876,7 @@
         [
           { "verse": 13, "text": "I’ll bring burnt-off’rings to thy house;" },
           { "text": "\t\t\tto thee my vows I’ll pay," },
-          { "verse": 14, "text": "Which my lips uttered, my mouth spake," },
+          { "verse": 14, "text": "\tWhich my lips uttered, my mouth spake," },
           { "text": "\t\t\twhen trouble on me lay." }
         ],
         [
@@ -5888,13 +5888,13 @@
         [
           { "verse": 16, "text": "All that fear God, come, hear, I’ll tell" },
           { "text": "\t\t\twhat he did for my soul." },
-          { "verse": 17, "text": "I with my mouth unto him cried," },
+          { "verse": 17, "text": "\tI with my mouth unto him cried," },
           { "text": "\t\t\tmy tongue did him extol." }
         ],
         [
           { "verse": 18, "text": "If in my heart I sin regard," },
           { "text": "\t\t\tthe Lord me will not hear:" },
-          { "verse": 19, "text": "But surely God me heard, and to" },
+          { "verse": 19, "text": "\tBut surely God me heard, and to" },
           { "text": "\t\t\tmy prayèr’s voice gave ear." }
         ],
         [
@@ -6061,7 +6061,7 @@
         [
           { "verse": 14, "text": "When there th’ Almighty scattered kings," },
           { "text": "\t\t\tlike Salmon’s snow ’twas white." },
-          { "verse": 15, "text": "God’s hill is like to Bashan hill," },
+          { "verse": 15, "text": "\tGod’s hill is like to Bashan hill," },
           { "text": "\t\t\tlike Bashan hill for height." }
         ],
         [
@@ -7036,7 +7036,7 @@
         ],
         [
           { "verse": 5, "text": "Lift not your horn on high, nor speak" },
-          { "verse": 6, "text": "with stubborn neck. But know," },
+          { "verse": 6, "text": "\twith stubborn neck. But know," },
           { "text": "That not from east, nor west, nor south," },
           { "text": "\tpromötion doth flow." }
         ],
@@ -7068,13 +7068,13 @@
         [
           { "verse": 1, "text": "In Judah’s land God is well known," },
           { "text": "\t\t\this name ’s in Isr’el great:" },
-          { "verse": 2, "text": "In Salem is his tabernacle," },
+          { "verse": 2, "text": "\tIn Salem is his tabernacle," },
           { "text": "\t\t\tin Zion is his seat." }
         ],
         [
           { "verse": 3, "text": "There arrows of the bow he brake," },
           { "text": "\t\t\tthe shield, the sword, the war." },
-          { "verse": 4, "text": "More glorious thou than hills of prey," },
+          { "verse": 4, "text": "\tMore glorious thou than hills of prey," },
           { "text": "\t\t\tmore excellent art far." }
         ],
         [
@@ -7257,7 +7257,7 @@
         [
           { "verse": 2, "text": "My mouth shall speak a parable," },
           { "text": "\t\t\tand sayings dark of old;" },
-          { "verse": 3, "text": "The same which we have heard and known," },
+          { "verse": 3, "text": "\tThe same which we have heard and known," },
           { "text": "\t\t\tand us our fathers told." }
         ],
         [
@@ -7305,7 +7305,7 @@
         [
           { "verse": 10, "text": "They brake God’s cov’nant, and refused" },
           { "text": "\t\t\tin his commands to go;" },
-          { "verse": 11, "text": "His works and wonders they forgot," },
+          { "verse": 11, "text": "\tHis works and wonders they forgot," },
           { "text": "\t\t\twhich he to them did show." }
         ],
         [
@@ -7323,7 +7323,7 @@
         [
           { "verse": 14, "text": "With cloud by day, with light of fire" },
           { "text": "\t\t\tall night, he did them guide." },
-          { "verse": 15, "text": "In desert rocks he clave, and drink," },
+          { "verse": 15, "text": "\tIn desert rocks he clave, and drink," },
           { "text": "\t\t\tas from great depths, supplied." }
         ],
         [
@@ -7360,13 +7360,13 @@
         [
           { "verse": 22, "text": "For they believed not God, nor trust" },
           { "text": "\t\t\tin his salvation had;" },
-          { "verse": 23, "text": "Though clouds above he did command," },
+          { "verse": 23, "text": "\tThough clouds above he did command," },
           { "text": "\t\t\tand heav’n’s doors open made," }
         ],
         [
           { "verse": 24, "text": "And manna rained on them, and gave" },
           { "text": "\t\t\tthem corn of heav’n to eat." },
-          { "verse": 25, "text": "Man angels’ food did eat; to them" },
+          { "verse": 25, "text": "\tMan angels’ food did eat; to them" },
           { "text": "\t\t\the to the full sent meat." }
         ],
         [
@@ -7499,7 +7499,7 @@
         [
           { "verse": 47, "text": "Their vines with hail, their sycamores" },
           { "text": "\t\t\the with the frost did blast:" },
-          { "verse": 48, "text": "Their beasts to hail he gave; their flocks" },
+          { "verse": 48, "text": "\tTheir beasts to hail he gave; their flocks" },
           { "text": "\t\t\thot thunderbolts did waste." }
         ],
         [
@@ -7571,7 +7571,7 @@
         [
           { "verse": 59, "text": "When God heard this, he waxèd wroth," },
           { "text": "\t\t\tand much loathed Isr’el then:" },
-          { "verse": 60, "text": "So Shiloh’s tent he left, the tent" },
+          { "verse": 60, "text": "\tSo Shiloh’s tent he left, the tent" },
           { "text": "\t\t\twhich he had placed with men." }
         ],
         [
@@ -7589,7 +7589,7 @@
         [
           { "verse": 63, "text": "The fire consumed their choice young men;" },
           { "text": "\t\t\ttheir maids no marriage had;" },
-          { "verse": 64, "text": "And when their priests fell by the sword," },
+          { "verse": 64, "text": "\tAnd when their priests fell by the sword," },
           { "text": "\t\t\ttheir wives no mourning made." }
         ],
         [
@@ -8923,7 +8923,7 @@
         [
           { "text": "\tIt is that they for ever may" },
           { "text": "\t\t\tdestroyèd be and slain:" },
-          { "verse": 8, "text": "But thou, O LORD, art the most High," },
+          { "verse": 8, "text": "\tBut thou, O LORD, art the most High," },
           { "text": "\t\t\tfor ever to remain." }
         ],
         [
@@ -9681,7 +9681,7 @@
           { "verse": 23, "text": "My wonted strength and force he hath" },
           { "text": "\tabated in the way," },
           { "text": "And he my days hath shortenèd:" },
-          { "verse": 24, "text": "Thus therefore did I say," }
+          { "verse": 24, "text": "\tThus therefore did I say," }
         ],
         [
           { "text": "My God, in mid-time of my days" },
@@ -10157,7 +10157,7 @@
         [
           { "verse": 1, "text": "Give thanks to GOD, call on his name;" },
           { "text": "\t\t\tto men his deeds make known." },
-          { "verse": 2, "text": "Sing ye to him, sing psalms; proclaim" },
+          { "verse": 2, "text": "\tSing ye to him, sing psalms; proclaim" },
           { "text": "\t\t\this wondrous works each one." }
         ],
         [
@@ -10211,7 +10211,7 @@
         [
           { "verse": 11, "text": "He said, I’ll give Canàan’s land" },
           { "text": "\t\t\tfor heritage to you;" },
-          { "verse": 12, "text": "While they were strangers there, and few," },
+          { "verse": 12, "text": "\tWhile they were strangers there, and few," },
           { "text": "\t\t\tin number very few:" }
         ],
         [
@@ -10235,13 +10235,13 @@
         [
           { "verse": 16, "text": "He called for famine on the land," },
           { "text": "\t\t\the brake the staff of bread:" },
-          { "verse": 17, "text": "But yet he sent a man before," },
+          { "verse": 17, "text": "\tBut yet he sent a man before," },
           { "text": "\t\t\tby whom they should be fed;" }
         ],
         [
           { "text": "\tEv’n Joseph, whom unnaturally" },
           { "text": "\t\t\tsell for a slave did they;" },
-          { "verse": 18, "text": "Whose feet with fetters they did hurt," },
+          { "verse": 18, "text": "\tWhose feet with fetters they did hurt," },
           { "text": "\t\t\tand he in irons lay;" }
         ],
         [
@@ -10289,43 +10289,43 @@
         [
           { "verse": 26, "text": "His servant Moses he did send," },
           { "text": "\t\t\tAaron his chosen one." },
-          { "verse": 27, "text": "By these his signs and wonders great" },
+          { "verse": 27, "text": "\tBy these his signs and wonders great" },
           { "text": "\t\t\tin Ham’s land were made known." }
         ],
         [
           { "verse": 28, "text": "Darkness he sent, and made it dark;" },
           { "text": "\t\t\this word they did obey." },
-          { "verse": 29, "text": "He turned their waters into blood," },
+          { "verse": 29, "text": "\tHe turned their waters into blood," },
           { "text": "\t\t\tand he their fish did slay." }
         ],
         [
           { "verse": 30, "text": "The land in plenty brought forth frogs" },
           { "text": "\t\t\tin chambers of their kings." },
-          { "verse": 31, "text": "His word all sorts of flies and lice" },
+          { "verse": 31, "text": "\tHis word all sorts of flies and lice" },
           { "text": "\t\t\tin all their borders brings." }
         ],
         [
           { "verse": 32, "text": "He hail for rain, and flaming fire" },
           { "text": "\t\t\tinto their land he sent:" },
-          { "verse": 33, "text": "And he their vines and fig-trees smote;" },
+          { "verse": 33, "text": "\tAnd he their vines and fig-trees smote;" },
           { "text": "\t\t\ttrees of their coasts he rent." }
         ],
         [
           { "verse": 34, "text": "He spake, and caterpillars came," },
           { "text": "\t\t\tlocusts did much abound;" },
-          { "verse": 35, "text": "Which in their land all herbs consumed," },
+          { "verse": 35, "text": "\tWhich in their land all herbs consumed," },
           { "text": "\t\t\tand all fruits of their ground." }
         ],
         [
           { "verse": 36, "text": "He smote all first-born in their land," },
           { "text": "\t\t\tchief of their strength each one." },
-          { "verse": 37, "text": "With gold and silver brought them forth," },
+          { "verse": 37, "text": "\tWith gold and silver brought them forth," },
           { "text": "\t\t\tweak in their tribes were none." }
         ],
         [
           { "verse": 38, "text": "Egypt was glad when forth they went," },
           { "text": "\t\t\ttheir fear on them did light." },
-          { "verse": 39, "text": "He spread a cloud for covering," },
+          { "verse": 39, "text": "\tHe spread a cloud for covering," },
           { "text": "\t\t\tand fire to shine by night." }
         ],
         [
@@ -10338,7 +10338,7 @@
         [
           { "verse": 42, "text": "For on his holy promise he," },
           { "text": "\t\t\tand servant Abr’ham, thought." },
-          { "verse": 43, "text": "With joy his people, his elect" },
+          { "verse": 43, "text": "\tWith joy his people, his elect" },
           { "text": "\t\t\twith gladness, forth he brought." }
         ],
         [
@@ -10547,7 +10547,7 @@
         ],
         [
           { "text": "So was the land defiled with blood." },
-          { "verse": 39, "text": "They stained with their own way," },
+          { "verse": 39, "text": "\tThey stained with their own way," },
           { "text": "And with their own invëntions" },
           { "text": "\ta whoring they did stray." }
         ],
@@ -10577,7 +10577,7 @@
         ],
         [
           { "text": "After his mercies’ multitude" },
-          { "verse": 46, "text": "he did repent: And made" },
+          { "verse": 46, "text": "\the did repent: And made" },
           { "text": "Them to be pitied of all those" },
           { "text": "\twho did them captive lead." }
         ],
@@ -10602,18 +10602,18 @@
         [
           { "verse": 1, "text": "Praise GOD, for he is good: for still" },
           { "text": "\t\t\this mercies lasting be." },
-          { "verse": 2, "text": "Let GOD’s redeemed say so, whom he" },
+          { "verse": 2, "text": "\tLet GOD’s redeemed say so, whom he" },
           { "text": "\t\t\tfrom th’ en’my’s hand did free;" }
         ],
         [
           { "verse": 3, "text": "And gathered them out of the lands," },
           { "text": "\t\t\tfrom north, south, east, and west." },
-          { "verse": 4, "text": "They strayed in desert’s pathless way," },
+          { "verse": 4, "text": "\tThey strayed in desert’s pathless way," },
           { "text": "\t\t\tno city found to rest." }
         ],
         [
           { "verse": 5, "text": "For thirst and hunger in them faints" },
-          { "verse": 6, "text": "their soul. When straits them press," },
+          { "verse": 6, "text": "\t\t\ttheir soul. When straits them press," },
           { "text": "\tThey cry unto the LORD, and he" },
           { "text": "\t\t\tthem frees from their distress." }
         ],
@@ -10650,7 +10650,7 @@
         [
           { "verse": 12, "text": "Their heart he did bring down with grief," },
           { "text": "\t\t\tthey fell, no help could have." },
-          { "verse": 13, "text": "In trouble then they cried to GOD," },
+          { "verse": 13, "text": "\tIn trouble then they cried to GOD," },
           { "text": "\t\t\the them from straits did save." }
         ],
         [
@@ -10675,13 +10675,13 @@
         [
           { "verse": 17, "text": "Fools, for their sin, and their offence," },
           { "text": "\t\t\tdo sore affliction bear;" },
-          { "verse": 18, "text": "All kind of meat their soul abhors;" },
+          { "verse": 18, "text": "\tAll kind of meat their soul abhors;" },
           { "text": "\t\t\tthey to death’s gates draw near." }
         ],
         [
           { "verse": 19, "text": "In grief they cry to GOD; he saves" },
           { "text": "\t\t\tthem from their miseries." },
-          { "verse": 20, "text": "He sends his word, them heals, and them" },
+          { "verse": 20, "text": "\tHe sends his word, them heals, and them" },
           { "text": "\t\t\tfrom their destruction frees." }
         ],
         [
@@ -10699,7 +10699,7 @@
         [
           { "verse": 23, "text": "Who go to sea in ships, and in" },
           { "text": "\t\t\tgreat waters trading be," },
-          { "verse": 24, "text": "Within the deep these men GOD’s works" },
+          { "verse": 24, "text": "\tWithin the deep these men GOD’s works" },
           { "text": "\t\t\tand his great wonders see." }
         ],
         [
@@ -10717,7 +10717,7 @@
         [
           { "verse": 27, "text": "They reel and stagger like one drunk," },
           { "text": "\t\t\tat their wit’s end they be:" },
-          { "verse": 28, "text": "Then they to GOD in trouble cry," },
+          { "verse": 28, "text": "\tThen they to GOD in trouble cry," },
           { "text": "\t\t\twho them from straits doth free." }
         ],
         [
@@ -10747,7 +10747,7 @@
         [
           { "verse": 33, "text": "He to dry land turns water-springs," },
           { "text": "\t\t\tand floods to wilderness;" },
-          { "verse": 34, "text": "For sins of those that dwell therein," },
+          { "verse": 34, "text": "\tFor sins of those that dwell therein," },
           { "text": "\t\t\tfat land to barrenness." }
         ],
         [
@@ -10765,7 +10765,7 @@
         [
           { "verse": 37, "text": "There sow they fields, and vineyards plant," },
           { "text": "\t\t\tto yield fruits of increase." },
-          { "verse": 38, "text": "His blessing makes them multiply," },
+          { "verse": 38, "text": "\tHis blessing makes them multiply," },
           { "text": "\t\t\tlets not their beasts decrease." }
         ],
         [
@@ -11427,7 +11427,7 @@
         ],
         [
           { "verse": 15, "text": "Dear in GOD’s sight is his saints’ death." },
-          { "verse": 16, "text": "Thy servant, LORD, am I;" },
+          { "verse": 16, "text": "\tThy servant, LORD, am I;" },
           { "text": "Thy servant sure, thine handmaid’s son:" },
           { "text": "\tmy bands thou didst untie." }
         ],
@@ -11887,13 +11887,13 @@
         [
           { "verse": 53, "text": "Horror took hold on me, because" },
           { "text": "\t\t\till men thy law forsake." },
-          { "verse": 54, "text": "I in my house of pilgrimage" },
+          { "verse": 54, "text": "\tI in my house of pilgrimage" },
           { "text": "\t\t\tthy laws my songs do make." }
         ],
         [
           { "verse": 55, "text": "Thy name by night, LORD, I did mind," },
           { "text": "\t\t\tand I have kept thy law." },
-          { "verse": 56, "text": "And this I had, because thy word" },
+          { "verse": 56, "text": "\tAnd this I had, because thy word" },
           { "text": "\t\t\tI kept, and stood in awe." }
         ]
       ]
@@ -11951,13 +11951,13 @@
         [
           { "verse": 65, "text": "Well hast thou with thy servant dealt," },
           { "text": "\t\t\tas thou didst promise give." },
-          { "verse": 66, "text": "Good judgment me, and knowledge teach," },
+          { "verse": 66, "text": "\tGood judgment me, and knowledge teach," },
           { "text": "\t\t\tfor I thy word believe." }
         ],
         [
           { "verse": 67, "text": "Ere I afflicted was I strayed;" },
           { "text": "\t\t\tbut now I keep thy word." },
-          { "verse": 68, "text": "Both good thou art, and good thou do’st:" },
+          { "verse": 68, "text": "\tBoth good thou art, and good thou do’st:" },
           { "text": "\t\t\tteach me thy statutes, Lord." }
         ],
         [
@@ -12953,7 +12953,7 @@
       "stanzas": [
         [
           { "verse": 1, "text": "LORD, from the depths to thee I cried." },
-          { "verse": 2, "text": "My voice, Lord, do thou hear:" },
+          { "verse": 2, "text": "\tMy voice, Lord, do thou hear:" },
           { "text": "Unto my supplications’ voice" },
           { "text": "\tgive an attentive ear." }
         ],
@@ -13180,13 +13180,13 @@
         ],
         [
           { "verse": 8, "text": "Egypt’s first-born, from man to beast" },
-          { "verse": 9, "text": "who smote. Strange tokens he" },
+          { "verse": 9, "text": "\t\t\twho smote. Strange tokens he" },
           { "text": "\tOn Pharaoh and his servants sent," },
           { "text": "\t\t\tEgypt, in midst of thee." }
         ],
         [
           { "verse": 10, "text": "He smote great nations, slew great kings:" },
-          { "verse": 11, "text": "Sihon of Heshbon king," },
+          { "verse": 11, "text": "\t\t\tSihon of Heshbon king," },
           { "text": "\tAnd Og of Bashan, and to nought" },
           { "text": "\t\t\tdid Canaan’s kingdoms bring:" }
         ],
@@ -13217,13 +13217,13 @@
         [
           { "verse": 16, "text": "Mouths have they, but they do not speak;" },
           { "text": "\t\t\teyes, but they do not see;" },
-          { "verse": 17, "text": "Ears have they, but hear not; and in" },
+          { "verse": 17, "text": "\tEars have they, but hear not; and in" },
           { "text": "\t\t\ttheir mouths no breathing be." }
         ],
         [
           { "verse": 18, "text": "Their makers are like them; so are" },
           { "text": "\t\t\tall that on them rely." },
-          { "verse": 19, "text": "O Isr’el’s house, bless GOD; bless GOD," },
+          { "verse": 19, "text": "\tO Isr’el’s house, bless GOD; bless GOD," },
           { "text": "\t\t\tO Aaron’s family." }
         ],
         [
@@ -13517,7 +13517,7 @@
         [
           { "verse": 1, "text": "Thee will I praise with all my heart," },
           { "text": "\t\t\tI will sing praise to thee" },
-          { "verse": 2, "text": "Before the gods: And worship will" },
+          { "verse": 2, "text": "\tBefore the gods: And worship will" },
           { "text": "\t\t\ttoward thy sanctuary." }
         ],
         [
@@ -13592,19 +13592,19 @@
         [
           { "verse": 5, "text": "Behind, before, thou hast beset," },
           { "text": "\t\t\tand laid on me thine hand." },
-          { "verse": 6, "text": "Such knowledge is too strange for me," },
+          { "verse": 6, "text": "\tSuch knowledge is too strange for me," },
           { "text": "\t\t\ttoo high to understand." }
         ],
         [
           { "verse": 7, "text": "From thy Spirit whither shall I go?" },
           { "text": "\t\t\tor from thy presence fly?" },
-          { "verse": 8, "text": "Ascend I heav’n, lo, thou art there;" },
+          { "verse": 8, "text": "\tAscend I heav’n, lo, thou art there;" },
           { "text": "\t\t\tthere, if in hell I lie." }
         ],
         [
           { "verse": 9, "text": "Take I the morning wings, and dwell" },
           { "text": "\t\t\tin utmost parts of sea;" },
-          { "verse": 10, "text": "Ev’n there, Lord, shall thy hand me lead," },
+          { "verse": 10, "text": "\tEv’n there, Lord, shall thy hand me lead," },
           { "text": "\t\t\tthy right hand hold shall me." }
         ],
         [
@@ -13664,7 +13664,7 @@
         [
           { "verse": 19, "text": "Thou, Lord, wilt sure the wicked slay:" },
           { "text": "\t\t\thence from me bloody men." },
-          { "verse": 20, "text": "Thy foes against thee loudly speak," },
+          { "verse": 20, "text": "\tThy foes against thee loudly speak," },
           { "text": "\t\t\tand take thy name in vain." }
         ],
         [
@@ -13676,7 +13676,7 @@
         [
           { "verse": 22, "text": "With perfect hatred them I hate," },
           { "text": "\t\t\tmy foes I them do hold." },
-          { "verse": 23, "text": "Search me, O God, and know my heart," },
+          { "verse": 23, "text": "\tSearch me, O God, and know my heart," },
           { "text": "\t\t\ttry me, my thoughts unfold:" }
         ],
         [
@@ -14087,12 +14087,12 @@
         [
           { "verse": 6, "text": "Cast forth thy lightning, scatter them;" },
           { "text": "\t\t\tthine arrows shoot, them rout." },
-          { "verse": 7, "text": "Thine hand send from above, me save;" },
+          { "verse": 7, "text": "\tThine hand send from above, me save;" },
           { "text": "\t\t\tfrom great depths draw me out;" }
         ],
         [
           { "text": "\tAnd from the hand of children strange," },
-          { "verse": 8, "text": "Whose mouth speaks vanity;" },
+          { "verse": 8, "text": "\t\t\tWhose mouth speaks vanity;" },
           { "text": "\tAnd their right hand is a right hand" },
           { "text": "\t\t\tthat works deceitfully." }
         ],
@@ -14348,7 +14348,7 @@
       "stanzas": [
         [
           { "verse": 1, "text": "Praise GOD. The LORD praise, O my soul." },
-          { "verse": 2, "text": "I’ll praise GOD while I live;" },
+          { "verse": 2, "text": "\tI’ll praise GOD while I live;" },
           { "text": "While I have being to my God" },
           { "text": "\tin songs I’ll praises give." }
         ],
@@ -14501,7 +14501,7 @@
         [
           { "verse": 3, "text": "O praise ye him, both sun and moon;" },
           { "text": "\t\t\tpraise him, all stars of light." },
-          { "verse": 4, "text": "Ye heav’ns of heav’ns him praise, and floods" },
+          { "verse": 4, "text": "\tYe heav’ns of heav’ns him praise, and floods" },
           { "text": "\t\t\tabove the heavens’ height." }
         ],
         [
@@ -14519,19 +14519,19 @@
         [
           { "verse": 7, "text": "Praise ye JEHOVAH from the earth," },
           { "text": "\t\t\tdragons, and ev’ry deep:" },
-          { "verse": 8, "text": "Fire, hail, snow, vapour, stormy wind," },
+          { "verse": 8, "text": "\tFire, hail, snow, vapour, stormy wind," },
           { "text": "\t\t\this word that fully keep." }
         ],
         [
           { "verse": 9, "text": "All hills and mountains, fruitful trees," },
           { "text": "\t\t\tand all ye cedars high:" },
-          { "verse": 10, "text": "Beasts, and all cattle, creeping things," },
+          { "verse": 10, "text": "\tBeasts, and all cattle, creeping things," },
           { "text": "\t\t\tand all ye birds that fly." }
         ],
         [
           { "verse": 11, "text": "Kings of the earth, all nätions," },
           { "text": "\t\t\tprinces, earth’s judges all:" },
-          { "verse": 12, "text": "Both young men, yea, and maidens too," },
+          { "verse": 12, "text": "\tBoth young men, yea, and maidens too," },
           { "text": "\t\t\told men, and children small." }
         ],
         [

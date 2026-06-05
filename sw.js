@@ -2,7 +2,7 @@
 // Strategy: stale-while-revalidate for own-origin GET requests. Bump VERSION on
 // every meaningful asset change so old caches are flushed on activation.
 
-const VERSION = 'smv-v18';
+const VERSION = 'smv-v19';
 const ASSETS = [
     './',
     './index.html',

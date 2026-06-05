@@ -301,7 +301,13 @@ const App = {
             stanzaNodes.push(el('a', {
                 class: 'stanza',
                 href: settingUrl(setting, stanzaNum, params),
-                title: `Open stanza ${stanzaNum}`,
+                title: `Present stanza ${stanzaNum}`,
+                onclick: e => {
+                    // Plain left clicks open in present mode; let modified
+                    // clicks (new tab / window / download) keep default nav.
+                    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+                    presentOnNextRender = true;
+                },
             }, ...lineNodes));
         }
 
@@ -311,7 +317,17 @@ const App = {
             children.push(el('div', { class: 'stanzas' }, ...stanzaNodes));
         }
 
-        children.push(copyLinkButton());
+        const presentBtn = el('button', {
+            type: 'button',
+            class: 'present-btn',
+            onclick: () => {
+                presentOnNextRender = true;
+                const url = settingUrl(setting, 1, params);
+                if (location.hash === url) App.render();
+                else location.hash = url;
+            },
+        }, 'Present \u26F6');
+        children.push(el('div', { class: 'stanza-actions' }, presentBtn, copyLinkButton()));
 
         children.push(adjacentPsalmNav(setting.psalm, this.byPsalm));
 
@@ -370,12 +386,6 @@ const App = {
             href: settingUrl(setting, null, params),
         }, '\u2191 Back to ' + crumbLabel);
 
-        const presentBtn = el('button', {
-            class: 'present-btn',
-            type: 'button',
-            onclick: () => enterPresent(),
-        }, 'Present \u26F6');
-
         mount(el('article', { class: 'stanza-view' },
             el('p', { class: 'crumbs' },
                 el('a', { href: settingUrl(setting, null, params) }, crumbLabel)),
@@ -383,11 +393,15 @@ const App = {
             el('div', { class: 'stanza-body-wrap' },
                 el('div', { class: 'stanza-body' }, ...lineNodes)),
             el('nav', { class: 'stanza-nav' }, prevLink, nextLink),
-            el('div', { class: 'stanza-actions' }, presentBtn, copyLinkButton()),
+            el('div', { class: 'stanza-actions' }, copyLinkButton()),
             back,
         ));
-        // Re-applying the same hash (e.g. navigating to the same stanza on
-        // re-render) preserves present mode; nothing else to do here.
+        // If the user reached this stanza by clicking from the setting page
+        // (or the Present button), jump straight into present mode.
+        if (presentOnNextRender) {
+            presentOnNextRender = false;
+            enterPresent();
+        }
     },
 
     // ---------- Indexes ----------
@@ -1235,6 +1249,9 @@ const PRESENT_HIDE_DELAY = 2500;
 let presentControls = null;
 let presentTopbar = null;
 let presentHideTimer = null;
+// Set by the setting page when a click should auto-enter present mode
+// on the next stanza render. Consumed in renderStanza after mount.
+let presentOnNextRender = false;
 
 function clickStanzaLink(selector) {
     const a = document.querySelector(selector);
@@ -1259,7 +1276,7 @@ function showPresentTopbar() {
 
 function hidePresentTopbar() {
     if (!presentTopbar) return;
-    // Defer while the user is actively in the slider / exit button.
+    // Defer while the user is actively in the slider.
     if (presentTopbar.contains(document.activeElement)) {
         presentHideTimer = setTimeout(hidePresentTopbar, PRESENT_HIDE_DELAY);
         return;
@@ -1304,18 +1321,7 @@ function ensurePresentControls() {
         showPresentTopbar();
     });
 
-    const exitBtn = el('button', {
-        type: 'button',
-        class: 'present-exit',
-        'aria-label': 'Exit presentation mode',
-        onclick: e => { e.preventDefault(); exitPresent(); },
-    }, '\u00d7');
-
-    presentTopbar = el('div', { class: 'present-topbar' },
-        el('span', { class: 'present-topbar-spacer', 'aria-hidden': 'true' }),
-        slider,
-        exitBtn,
-    );
+    presentTopbar = el('div', { class: 'present-topbar' }, slider);
     presentTopbar.addEventListener('pointerenter', showPresentTopbar);
     presentTopbar.addEventListener('pointermove', showPresentTopbar);
 
@@ -1362,6 +1368,16 @@ function exitPresent() {
     if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
     }
+    // If we're still sitting on a stanza route (i.e. exit was triggered by
+    // the user leaving fullscreen rather than by navigating elsewhere), drop
+    // the stanza segment so they land back on the setting page. Use replace
+    // so the in-between stanza URL isn't left in history.
+    const hash = location.hash || '';
+    const stanzaRe = /^#\/psalm\/\d+(?:\/p\d+)?(?:\/v\d+)?\/s\d+(\?.*)?$/;
+    if (stanzaRe.test(hash)) {
+        const back = hash.replace(/\/s\d+(?=$|\?)/, '');
+        location.replace(back);
+    }
 }
 
 function showPresentTutorial(onClose) {
@@ -1383,9 +1399,8 @@ function showPresentTutorial(onClose) {
             el('kbd', null, 'Esc'), ' exits.'),
         el('p', null,
             'Touch: tap the left or right side of the screen to move between stanzas. ',
-            'Tap the top edge to bring up the font-size slider and the ',
-            el('span', { class: 'inline-glyph', 'aria-hidden': 'true' }, '\u00d7'),
-            ' exit button \u2014 they fade out again after a moment.'),
+            'Tap the top edge to slide the font-size slider into view; it slides back out after a moment. ',
+            'Use your device\u2019s usual gesture to exit fullscreen when you\u2019re done.'),
         el('div', { class: 'modal-controls' },
             el('label', { for: 'dont-show-tutorial' }, dontShow, ' Don\u2019t show this again'),
             okBtn,

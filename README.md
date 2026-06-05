@@ -1,18 +1,47 @@
 # Scottish Metrical Psalter (1650)
 
-The complete 1650 Scottish Metrical Psalter as structured JSON, paired with a
-no-build, browser-side single-page app that reads the JSON directly and
-renders it as a fully browsable, searchable, printable, projectable book.
+A browsable, searchable web edition of the complete 1650 Scottish Metrical
+Psalter, built first and foremost for **presenting psalm lyrics on a screen**
+for congregational singing &mdash; one stanza at a time, full-screen, with the
+minimum of chrome between the reader and the text.
+
+For everyday use it doubles as a fast online reader: indexes by meter and
+first line, a full concordance, full-text search, and clean print output. The
+whole site is a no-build static page that reads a single JSON file at runtime.
 
 ## Browse online
 
-A static, no-build web app is published from this repository:
-
 **[aoriver716.github.io/smv](https://aoriver716.github.io/smv/)**
 
-It loads [`psalter.json`](psalter.json) at runtime and renders the contents,
-each psalm, individual stanzas, a meter index, a first-line index, and a full
-concordance, all from the same data file.
+Installable as a Progressive Web App (Chrome/Edge address-bar install icon;
+iOS Safari **Share &rarr; Add to Home Screen**). Works offline once loaded.
+
+## What it does
+
+### Presentation mode
+
+The primary use case. From any psalm setting, click a stanza (or the
+**Present** button) to enter full-screen presentation. The current stanza
+fills the screen at a comfortable reading distance; everything else falls
+away.
+
+- **Keyboard:** `←` / `→` move between stanzas, `Esc` exits.
+- **Touch:** tap left/right edges to move; tap the top edge to reveal a
+  font-size slider that auto-hides.
+- **Direct URLs:** any stanza has its own URL, so a service order can link
+  straight to the right stanza of the right psalm.
+- **Verse filters:** append `?verses=1-3,5` to limit a setting to selected
+  verses and present only those.
+
+### Browsing and reference
+
+- Table of contents grouped into the five traditional books of the Psalter.
+- Index of meters and an alphabetical index of first lines.
+- Full concordance, A&ndash;Z, with each occurrence cited in context.
+- Live search box (drop-down suggestions; full results page on submit).
+- Per-stanza permalinks; **Share** / copy-link button on every view.
+- Print stylesheet that strips the chrome and lays a psalm out cleanly.
+- Light / dark / system theme, remembered per device.
 
 ## Contents
 
@@ -78,7 +107,7 @@ All routes are hash-based, so the page never reloads:
 | `#/psalm/{n}/v{V}` | A specific version of a multi-version psalm. |
 | `#/psalm/{n}/p{P}` | A specific part (Psalm 119 only at present). |
 | `#/psalm/{n}/p{P}/v{V}` | A specific part *and* version (supported, even though no current setting uses both). |
-| `#/psalm/{n}/&hellip;/s{S}` | Zoomed view of a single stanza, with previous/next arrows (also bound to `<-`, `->`, `Esc`). A **Present** button enters full-screen presentation mode; arrow keys still navigate and `Esc` exits. |
+| `#/psalm/{n}/&hellip;/s{S}` | Single-stanza view. Click the stanza (or press the **Present** button) to enter full-screen presentation. Arrow keys / left- and right-edge taps move between stanzas; `Esc` exits. |
 | `#/psalm/{n}/&hellip;?verses=1-3,5` | Filter to the given verses on either of the views above. |
 | `#/meters` | Index of meters (excluding Common Meter, which appears in every psalm). |
 | `#/first-lines` | Alphabetical index of first lines. |
@@ -89,17 +118,6 @@ All routes are hash-based, so the page never reloads:
 A theme selector (System / Light / Dark) is in the top-right of the header.
 The choice is remembered in `localStorage`; System (the default) follows
 your OS preference.
-
-On each psalm setting and stanza view there is a **Copy link** button that
-copies the current URL to the clipboard, and on the setting view there are
-**Previous / Next psalm** links beneath the stanzas. The site has a print
-stylesheet that hides navigation chrome and lays the stanzas out cleanly on
-paper &mdash; useful for printing a single psalm setting.
-
-The site is also a Progressive Web App: it ships a manifest and a service
-worker so it can be installed (Chrome/Edge address-bar install icon; iOS
-Safari **Share &rarr; Add to Home Screen**) and works offline once you've
-loaded it.
 
 ## Sources
 

@@ -1229,16 +1229,48 @@ function initTheme() {
 // ---------- Present mode ----------
 
 const PRESENT_TUTORIAL_KEY = 'smv.presentTutorialDismissed';
+const PRESENT_FONT_KEY = 'smv.presentFontScale';
+const PRESENT_HIDE_DELAY = 2500;
 
 let presentControls = null;
+let presentTopbar = null;
+let presentHideTimer = null;
 
 function clickStanzaLink(selector) {
     const a = document.querySelector(selector);
     if (a) a.click();
 }
 
+function applyPresentFontScale(scale) {
+    document.documentElement.style.setProperty('--present-font-scale', String(scale));
+}
+
+function readPresentFontScale() {
+    const v = parseFloat(localStorage.getItem(PRESENT_FONT_KEY));
+    return Number.isFinite(v) && v >= 0.5 && v <= 2 ? v : 1;
+}
+
+function showPresentTopbar() {
+    if (!presentTopbar) return;
+    presentTopbar.classList.add('visible');
+    if (presentHideTimer) clearTimeout(presentHideTimer);
+    presentHideTimer = setTimeout(hidePresentTopbar, PRESENT_HIDE_DELAY);
+}
+
+function hidePresentTopbar() {
+    if (!presentTopbar) return;
+    // Defer while the user is actively in the slider / exit button.
+    if (presentTopbar.contains(document.activeElement)) {
+        presentHideTimer = setTimeout(hidePresentTopbar, PRESENT_HIDE_DELAY);
+        return;
+    }
+    presentTopbar.classList.remove('visible');
+    presentHideTimer = null;
+}
+
 function ensurePresentControls() {
     if (presentControls) return presentControls;
+
     const prev = el('button', {
         type: 'button',
         class: 'present-tap-zone prev',
@@ -1251,13 +1283,53 @@ function ensurePresentControls() {
         'aria-label': 'Next stanza',
         onclick: e => { e.preventDefault(); clickStanzaLink('a.next-stanza:not(.disabled)'); },
     });
-    const exit = el('button', {
+
+    const initialScale = readPresentFontScale();
+    applyPresentFontScale(initialScale);
+
+    const slider = el('input', {
+        type: 'range',
+        class: 'present-font-slider',
+        min: '0.5',
+        max: '2',
+        step: '0.05',
+        value: String(initialScale),
+        'aria-label': 'Stanza font size',
+        title: 'Font size',
+    });
+    slider.addEventListener('input', () => {
+        const v = parseFloat(slider.value);
+        applyPresentFontScale(v);
+        localStorage.setItem(PRESENT_FONT_KEY, String(v));
+        showPresentTopbar();
+    });
+
+    const exitBtn = el('button', {
         type: 'button',
         class: 'present-exit',
         'aria-label': 'Exit presentation mode',
         onclick: e => { e.preventDefault(); exitPresent(); },
     }, '\u00d7');
-    presentControls = el('div', { class: 'present-controls' }, prev, next, exit);
+
+    presentTopbar = el('div', { class: 'present-topbar' },
+        el('span', { class: 'present-topbar-spacer', 'aria-hidden': 'true' }),
+        slider,
+        exitBtn,
+    );
+    presentTopbar.addEventListener('pointerenter', showPresentTopbar);
+    presentTopbar.addEventListener('pointermove', showPresentTopbar);
+
+    const hotZone = el('div', { class: 'present-top-hot-zone', 'aria-hidden': 'true' });
+    hotZone.addEventListener('pointerenter', showPresentTopbar);
+    hotZone.addEventListener('pointerdown', e => {
+        // Swallow the touch so it doesn't also trigger a prev/next nav.
+        e.preventDefault();
+        showPresentTopbar();
+    });
+
+    presentControls = el('div', { class: 'present-controls' },
+        prev, next, hotZone, presentTopbar,
+    );
     return presentControls;
 }
 
@@ -1265,6 +1337,8 @@ function enterPresent() {
     const start = () => {
         document.body.classList.add('presenting');
         document.body.appendChild(ensurePresentControls());
+        // Reveal the top bar briefly so the controls are discoverable.
+        showPresentTopbar();
         if (document.documentElement.requestFullscreen) {
             document.documentElement.requestFullscreen().catch(() => {});
         }
@@ -1278,6 +1352,10 @@ function enterPresent() {
 
 function exitPresent() {
     document.body.classList.remove('presenting');
+    if (presentHideTimer) {
+        clearTimeout(presentHideTimer);
+        presentHideTimer = null;
+    }
     if (presentControls && presentControls.parentNode) {
         presentControls.parentNode.removeChild(presentControls);
     }
@@ -1304,9 +1382,10 @@ function showPresentTutorial(onClose) {
             ' move between stanzas, ',
             el('kbd', null, 'Esc'), ' exits.'),
         el('p', null,
-            'Touch: tap the left or right side of the screen to move between stanzas, tap ',
+            'Touch: tap the left or right side of the screen to move between stanzas. ',
+            'Tap the top edge to bring up the font-size slider and the ',
             el('span', { class: 'inline-glyph', 'aria-hidden': 'true' }, '\u00d7'),
-            ' in the top corner to exit.'),
+            ' exit button \u2014 they fade out again after a moment.'),
         el('div', { class: 'modal-controls' },
             el('label', { for: 'dont-show-tutorial' }, dontShow, ' Don\u2019t show this again'),
             okBtn,

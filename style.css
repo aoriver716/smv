@@ -695,7 +695,7 @@ body.presenting .stanza-view {
 body.presenting .stanza-view > :not(.stanza-body-wrap) { display: none; }
 
 body.presenting .stanza-body {
-    font-size: clamp(2rem, 6vw, 5rem);
+    font-size: calc(clamp(2rem, 6vw, 5rem) * var(--present-font-scale, 1));
     line-height: 1.4;
     padding-left: 0;
     text-align: center;
@@ -719,7 +719,7 @@ body.presenting .stanza-body .verse {
     color: var(--muted);
 }
 
-/* ------ Present-mode tap zones & exit button ------ */
+/* ------ Present-mode tap zones, top bar, hot zone & exit button ------ */
 
 /* Hidden by default; only inserted into the DOM while presenting, but the
    rule guards against any stray visibility outside present mode. */
@@ -753,30 +753,73 @@ body.presenting .present-controls { display: block; }
     outline-offset: -6px;
 }
 
-.present-exit {
+/* Thin invisible strip at the very top that wakes the top bar. Sits above
+   the tap zones so a tap there shows controls instead of advancing slides. */
+.present-top-hot-zone {
     position: fixed;
-    top: 0.75rem;
-    right: 0.75rem;
-    z-index: 51;
-    width: 2.5rem;
-    height: 2.5rem;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5rem;
+    z-index: 52;
+    background: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    touch-action: manipulation;
+}
+
+.present-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 53;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.85rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+}
+.present-topbar.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.present-font-slider {
+    width: clamp(8rem, 40vw, 16rem);
+    margin: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.present-exit {
+    justify-self: end;
+    width: 2.25rem;
+    height: 2.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--rule);
+    background: transparent;
     color: var(--fg);
-    border: none;
+    border: 1px solid var(--rule);
     border-radius: 999px;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     line-height: 1;
     cursor: pointer;
-    opacity: 0.55;
-    transition: opacity 150ms ease;
+    transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 .present-exit:hover,
 .present-exit:focus-visible {
-    opacity: 1;
+    background: var(--selection);
+    color: var(--accent);
+    border-color: var(--accent);
     outline: none;
 }
 

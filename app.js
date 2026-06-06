@@ -10,6 +10,7 @@ import { initMobileMenu, initSearchForm, syncSearchInput } from './js/ui/chrome.
 import { initTheme } from './js/ui/theme.js';
 import { registerServiceWorker } from './js/ui/serviceWorker.js';
 import { openModal } from './js/ui/modal.js';
+import { shareUrl } from './js/ui/share.js';
 
 // ------ App state ------
 
@@ -837,28 +838,10 @@ function shareButton() {
 
     btn.addEventListener('click', async () => {
         const url = location.href;
-        const data = { title: document.title, url };
-
-        // Prefer the OS share sheet when available; fall back to clipboard.
-        if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
-            try {
-                await navigator.share(data);
-                return;
-            } catch (e) {
-                if (e && e.name === 'AbortError') return;
-                // Other share errors fall through to clipboard.
-            }
-        }
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            try {
-                await navigator.clipboard.writeText(url);
-                flash('Link copied', 'copied');
-            } catch {
-                flash('Press Ctrl+C', 'failed');
-            }
-        } else {
-            flash('Press Ctrl+C', 'failed');
-        }
+        const result = await shareUrl({ url, title: document.title });
+        if (result === 'shared' || result === 'aborted') return;
+        if (result === 'copied') flash('Link copied', 'copied');
+        else flash('Press Ctrl+C', 'failed');
     });
     return btn;
 }
@@ -1388,7 +1371,6 @@ function playlistIndexRow(pl) {
         e.preventDefault();
         e.stopPropagation();
         const url = shareUrlForPlaylist(pl);
-        const data = { title: pl.name || 'Playlist', url };
         const flash = (cls) => {
             shareBtn.classList.add(cls);
             if (shareTimer) clearTimeout(shareTimer);
@@ -1397,16 +1379,9 @@ function playlistIndexRow(pl) {
                 shareTimer = null;
             }, 1500);
         };
-        if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
-            try { await navigator.share(data); return; }
-            catch (err) { if (err && err.name === 'AbortError') return; }
-        }
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            try { await navigator.clipboard.writeText(url); flash('copied'); return; }
-            catch { flash('failed'); }
-        } else {
-            flash('failed');
-        }
+        const result = await shareUrl({ url, title: pl.name || 'Playlist' });
+        if (result === 'shared' || result === 'aborted') return;
+        flash(result === 'copied' ? 'copied' : 'failed');
     });
     actions.appendChild(shareBtn);
 

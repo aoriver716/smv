@@ -13,6 +13,45 @@ import { openModal } from './js/ui/modal.js';
 import { shareUrl } from './js/ui/share.js';
 import { wireConfirmButton } from './js/ui/confirmButton.js';
 import { enterPresent, exitPresent } from './js/present/mode.js';
+import {
+    loadPlaylists,
+    savePlaylists,
+    getPlaylist,
+    upsertPlaylist,
+    deletePlaylist,
+    createBlankPlaylist,
+} from './js/playlists/store.js';
+import {
+    setEditorDraft,
+    clearEditorDraft,
+    getEditorDraft,
+} from './js/playlists/draft.js';
+import {
+    parseVerseRanges,
+    mergeRanges,
+    formatVerseRanges,
+    formatVerseRangesAscii,
+    versesSetFromRanges,
+    setToRanges,
+} from './js/playlists/verses.js';
+import {
+    encodeSettingForUrl,
+    decodeSettingFromUrl,
+    encodePlaylistToParams,
+    decodePlaylistFromParams,
+    shareUrlForPlaylist,
+} from './js/playlists/urlCodec.js';
+import {
+    computeVerseUnits,
+    snapVersesToUnits,
+} from './js/playlists/units.js';
+import {
+    findRendition,
+    isWholePsalm,
+    settingHasMultipleRenditions,
+    renditionLabel,
+    settingSummary,
+} from './js/playlists/renditions.js';
 import { renderHomeView } from './js/views/home.js';
 import { renderMetersView } from './js/views/meters.js';
 import { renderFirstLinesView } from './js/views/firstLines.js';
@@ -344,307 +383,6 @@ function shareButton() {
     return btn;
 }
 export { shareButton };
-
-// ---------- Playlists: store ----------
-
-const PLAYLISTS_KEY = 'smv-playlists';
-
-function loadPlaylists() {
-    try {
-        const raw = localStorage.getItem(PLAYLISTS_KEY);
-        if (!raw) return [];
-        const arr = JSON.parse(raw);
-        return Array.isArray(arr) ? arr : [];
-    } catch {
-        return [];
-    }
-}
-
-function savePlaylists(list) {
-    localStorage.setItem(PLAYLISTS_KEY, JSON.stringify(list));
-}
-
-function getPlaylist(id) {
-    return loadPlaylists().find(p => p.id === id) || null;
-}
-
-function upsertPlaylist(pl) {
-    pl.updatedAt = new Date().toISOString();
-    const list = loadPlaylists();
-    const i = list.findIndex(p => p.id === pl.id);
-    if (i >= 0) list[i] = pl;
-    else list.push(pl);
-    savePlaylists(list);
-}
-
-function deletePlaylist(id) {
-    savePlaylists(loadPlaylists().filter(p => p.id !== id));
-}
-
-function newPlaylistId() {
-    // ~6 base36 chars of randomness, prefixed for human readability.
-    return 'p_' + Math.random().toString(36).slice(2, 8);
-}
-
-function createBlankPlaylist() {
-    const now = new Date().toISOString();
-    return {
-        id: newPlaylistId(),
-        name: 'New playlist',
-        createdAt: now,
-        updatedAt: now,
-        mainTitleSlide: true,
-        perSettingTitles: true,
-        settings: [],
-    };
-}
-
-// ---------- Playlists: editor draft (no autosave) ----------
-//
-// The editor and picker mutate an in-memory clone of a playlist. Changes are
-// only written to storage when the user clicks "Save and close". "Cancel"
-// (or navigating away to anywhere outside the editor / picker) discards the
-// draft. New playlists are created as drafts only — they don't land in
-// storage until Save.
-
-let editorDraft = null; // { id, working, isNew }
-
-function cloneForDraft(pl) {
-    // structuredClone is fine in all current browsers we care about, but a
-    // JSON round-trip is portable and the playlist shape is JSON-safe.
-    return JSON.parse(JSON.stringify(pl));
-}
-
-function setEditorDraft(pl, { isNew = false } = {}) {
-    editorDraft = { id: pl.id, working: cloneForDraft(pl), isNew };
-    return editorDraft.working;
-}
-
-function clearEditorDraft() {
-    editorDraft = null;
-}
-
-function getEditorDraft(id) {
-    if (editorDraft && editorDraft.id === id) return editorDraft;
-    return null;
-}
-
-// ---------- Playlists: URL codec ----------
-
-// Encode setting -> "{psalm}[v{V}][p{P}][:{ranges}]"
-function encodeSettingForUrl(s) {
-    let out = String(s.psalm);
-    if (s.version != null) out += 'v' + s.version;
-    if (s.part != null)    out += 'p' + s.part;
-    if (s.verses && s.verses.length) {
-        out += ':' + formatVerseRangesAscii(s.verses);
-    }
-    return out;
-}
-
-function decodeSettingFromUrl(token) {
-    const m = token.match(/^(\d+)(?:v(\d+))?(?:p(\d+))?(?::([\d,\-]+))?$/);
-    if (!m) return null;
-    const setting = { psalm: parseInt(m[1], 10) };
-    if (m[2]) setting.version = parseInt(m[2], 10);
-    if (m[3]) setting.part = parseInt(m[3], 10);
-    if (m[4]) {
-        const ranges = parseVerseRanges(m[4]);
-        if (ranges && ranges.length) setting.verses = ranges;
-    }
-    return setting;
-}
-
-function encodePlaylistToParams(pl) {
-    const params = new URLSearchParams();
-    if (pl.name) params.set('n', pl.name);
-    const tFlags =
-        (pl.mainTitleSlide ? '1' : '0') +
-        (pl.perSettingTitles ? '1' : '0');
-    if (tFlags !== '11') params.set('t', tFlags);
-    if (pl.settings.length) {
-        params.set('d', pl.settings.map(encodeSettingForUrl).join(';'));
-    }
-    return params;
-}
-
-function decodePlaylistFromParams(params) {
-    const d = params.get('d');
-    if (!d) return null;
-    const settings = d.split(';').map(decodeSettingFromUrl).filter(Boolean);
-    if (!settings.length) return null;
-    const t = params.get('t') || '11';
-    return {
-        // No id: it's a draft until imported.
-        name: params.get('n') || 'Shared playlist',
-        mainTitleSlide: t[0] !== '0',
-        perSettingTitles: t[1] !== '0',
-        settings,
-    };
-}
-
-function shareUrlForPlaylist(pl) {
-    const params = encodePlaylistToParams(pl);
-    return location.origin + location.pathname + '#/playlists/shared?' + params.toString();
-}
-
-// ---------- Playlists: verse-range helpers ----------
-
-function parseVerseRanges(spec) {
-    if (!spec) return [];
-    const out = [];
-    for (const chunk of spec.split(',')) {
-        const m = chunk.trim().match(/^(\d+)(?:\s*[-\u2013]\s*(\d+))?$/);
-        if (!m) continue;
-        const a = parseInt(m[1], 10);
-        const b = m[2] ? parseInt(m[2], 10) : a;
-        out.push([Math.min(a, b), Math.max(a, b)]);
-    }
-    return mergeRanges(out);
-}
-
-function mergeRanges(ranges) {
-    if (!ranges.length) return [];
-    const sorted = ranges.slice().sort((a, b) => a[0] - b[0]);
-    const out = [sorted[0].slice()];
-    for (let i = 1; i < sorted.length; i++) {
-        const last = out[out.length - 1];
-        const [a, b] = sorted[i];
-        if (a <= last[1] + 1) last[1] = Math.max(last[1], b);
-        else out.push([a, b]);
-    }
-    return out;
-}
-
-function formatVerseRanges(ranges) {
-    // En-dash for display.
-    return ranges.map(([a, b]) => a === b ? String(a) : `${a}\u2013${b}`).join(', ');
-}
-
-function formatVerseRangesAscii(ranges) {
-    // Hyphen for URL-encoded data.
-    return ranges.map(([a, b]) => a === b ? String(a) : `${a}-${b}`).join(',');
-}
-
-function versesSetFromRanges(ranges) {
-    const set = new Set();
-    for (const [a, b] of ranges) {
-        for (let v = a; v <= b; v++) set.add(v);
-    }
-    return set;
-}
-
-function setToRanges(set) {
-    const sorted = [...set].sort((a, b) => a - b);
-    if (!sorted.length) return [];
-    const out = [];
-    let start = sorted[0], prev = sorted[0];
-    for (let i = 1; i < sorted.length; i++) {
-        const v = sorted[i];
-        if (v === prev + 1) { prev = v; continue; }
-        out.push([start, prev]);
-        start = v;
-        prev = v;
-    }
-    out.push([start, prev]);
-    return out;
-}
-
-// ---------- Playlists: verse-unit grouping (no-partial-verse rule, §4.1) ----------
-
-function computeVerseUnits(rendition) {
-    const units = [];
-    let cur = null;
-    for (let i = 0; i < rendition.stanzas.length; i++) {
-        const stanza = rendition.stanzas[i];
-        const firstLine = stanza[0];
-        const isVerseStart = firstLine && firstLine.verse != null;
-        if (isVerseStart || !cur) {
-            cur = {
-                startVerse: firstLine && firstLine.verse != null
-                    ? firstLine.verse
-                    : firstVerseInStanza(stanza),
-                endVerse: null,
-                stanzaIdxs: [],
-                startStanzaIdx: i,
-            };
-            units.push(cur);
-        }
-        // Track all verses present in this stanza.
-        let maxV = cur.endVerse;
-        let minV = cur.startVerse;
-        for (const line of stanza) {
-            const v = line._verse;
-            if (v == null) continue;
-            if (maxV == null || v > maxV) maxV = v;
-            if (minV == null || v < minV) minV = v;
-        }
-        cur.endVerse = maxV != null ? maxV : cur.startVerse;
-        if (cur.startVerse == null) cur.startVerse = minV;
-        cur.stanzaIdxs.push(i);
-    }
-    return units;
-}
-
-function firstVerseInStanza(stanza) {
-    for (const line of stanza) if (line._verse != null) return line._verse;
-    return null;
-}
-
-function snapVersesToUnits(verseSet, units) {
-    const out = new Set();
-    for (const u of units) {
-        let touches = false;
-        if (u.startVerse != null && u.endVerse != null) {
-            for (let v = u.startVerse; v <= u.endVerse; v++) {
-                if (verseSet.has(v)) { touches = true; break; }
-            }
-        }
-        if (touches) {
-            for (let v = u.startVerse; v <= u.endVerse; v++) out.add(v);
-        }
-    }
-    return out;
-}
-
-// ---------- Playlists: rendition lookup ----------
-
-function findRendition(psalm, version, part) {
-    const sibs = App.byPsalm && App.byPsalm.get(psalm);
-    if (!sibs) return null;
-    let r = sibs.find(s =>
-        (version == null || s.version === version) &&
-        (part == null    || s.part === part)
-    );
-    if (!r) r = sibs[0];
-    return r;
-}
-
-function isWholePsalm(setting) {
-    return !setting.verses || !setting.verses.length;
-}
-
-function settingHasMultipleRenditions(setting) {
-    const sibs = App.byPsalm && App.byPsalm.get(setting.psalm);
-    return sibs && sibs.length > 1;
-}
-
-function renditionLabel(rendition) {
-    return settingDesignator(rendition) || '';
-}
-
-function settingSummary(setting) {
-    const r = findRendition(setting.psalm, setting.version, setting.part);
-    const desigBits = [];
-    if (r && settingHasMultipleRenditions(setting)) {
-        const label = renditionLabel(r);
-        if (label) desigBits.push(label);
-    }
-    const verseBits = setting.verses && setting.verses.length
-        ? 'verses ' + formatVerseRanges(setting.verses)
-        : 'all verses';
-    return { desig: desigBits.join(' \u00b7 '), verseSummary: verseBits, rendition: r };
-}
 
 // ---------- Playlists: index row ----------
 

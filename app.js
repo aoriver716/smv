@@ -2648,7 +2648,7 @@ function renderPlaylistSlide(pl, queue, k) {
         ? el('div', { class: 'pl-present-chip' }, chipText)
         : null;
 
-    mount(el('article', { class: 'stanza-view pl-present-slide pl-present-' + slide.kind },
+    mount(el('article', { class: 'pl-present-slide pl-present-' + slide.kind },
         chip,
         body,
         el('nav', { class: 'stanza-nav' }, prevLink, nextLink),

@@ -703,6 +703,8 @@ body.presenting .stanza-body {
 }
 
 body.presenting .stanza-body .line {
+    display: block;
+    position: relative;
     text-align: center;
 }
 

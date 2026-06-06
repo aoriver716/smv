@@ -1338,29 +1338,11 @@ mark {
     font-size: 0.85rem;
 }
 
-.pl-row-trash {
-    flex: none;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    padding: 0.4rem;
-    color: var(--muted);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-.pl-row-trash svg { width: 1rem; height: 1rem; }
-.pl-row-trash:hover,
-.pl-row-trash:focus-visible {
-    color: var(--accent);
-    border-color: var(--accent);
-    outline: none;
-}
 .pl-row-trash-label {
     font-size: 0.8rem;
     font-family: var(--sans);
 }
+.pl-row-trash-label:not(:empty) { margin-left: 0.4rem; }
 
 .pl-row-actions {
     flex: none;

@@ -52,6 +52,7 @@ import {
     renditionLabel,
     settingSummary,
 } from './js/playlists/renditions.js';
+import { renderPlaylistsIndexView } from './js/playlists/index.js';
 import { renderHomeView } from './js/views/home.js';
 import { renderMetersView } from './js/views/meters.js';
 import { renderFirstLinesView } from './js/views/firstLines.js';
@@ -215,54 +216,7 @@ export const App = {
         return this.renderPlaylistEditor(tokens[0], params);
     },
 
-    renderPlaylistsIndex() {
-        document.title = 'Playlists \u2014 Scottish Metrical Psalter';
-        const lists = loadPlaylists();
-        const header = el('div', { class: 'pl-index-head' },
-            el('h1', null, 'Playlists'),
-            el('div', { class: 'pl-toolbar' },
-                el('button', {
-                    type: 'button', class: 'pl-btn pl-btn-primary',
-                    onclick: () => {
-                        const pl = createBlankPlaylist();
-                        setEditorDraft(pl, { isNew: true });
-                        location.hash = '#/playlists/' + pl.id;
-                    },
-                }, el('span', { html: ICONS.plus }), el('span', null, 'New playlist')),
-                el('button', {
-                    type: 'button', class: 'pl-btn pl-btn-link',
-                    onclick: () => promptImportFromUrl(),
-                }, 'Import from URL'),
-            ),
-        );
-
-        const children = [header];
-
-        if (!lists.length) {
-            children.push(el('div', { class: 'pl-empty' },
-                el('p', null,
-                    'A playlist is a saved order of psalm settings, ',
-                    'ready to present together end-to-end. Build one for a service, ',
-                    'family worship, or rehearsal; share the link with anyone.'),
-                el('button', {
-                    type: 'button', class: 'pl-btn pl-btn-primary',
-                    onclick: () => {
-                        const pl = createBlankPlaylist();
-                        setEditorDraft(pl, { isNew: true });
-                        location.hash = '#/playlists/' + pl.id;
-                    },
-                }, el('span', { html: ICONS.plus }), el('span', null, 'Create your first playlist')),
-            ));
-        } else {
-            const rows = lists
-                .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''))
-                .map(pl => playlistIndexRow(pl));
-            children.push(el('ul', { class: 'pl-index' }, ...rows));
-        }
-
-        children.push(el('a', { class: 'back-link', href: '#/' }, '\u2190 Back to contents'));
-        mount(el('article', { class: 'pl-page' }, ...children));
-    },
+    renderPlaylistsIndex() { renderPlaylistsIndexView(); },
 
     renderPlaylistEditor(id, params) {
         // Prefer the in-memory draft (covers brand-new playlists not yet
@@ -383,98 +337,6 @@ function shareButton() {
     return btn;
 }
 export { shareButton };
-
-// ---------- Playlists: index row ----------
-
-function playlistIndexRow(pl) {
-    const { settings } = pl;
-    const count = settings.length;
-    const updatedAgo = relativeTime(pl.updatedAt);
-    const row = el('li', { class: 'pl-row' });
-
-    const link = el('a', {
-        class: 'pl-row-link', href: '#/playlists/' + pl.id,
-    },
-        el('span', { class: 'pl-row-name' }, pl.name || 'Untitled playlist'),
-        el('span', { class: 'pl-row-meta' },
-            `${count} setting${count === 1 ? '' : 's'} \u00b7 ${updatedAgo}`),
-    );
-
-    const actions = el('div', { class: 'pl-row-actions' });
-
-    const presentBtn = el('a', {
-        class: 'pl-row-btn',
-        href: '#/playlists/' + pl.id + '/present',
-        title: 'Present playlist',
-        'aria-label': 'Present playlist',
-        html: ICONS.present,
-    });
-    presentBtn.addEventListener('click', e => e.stopPropagation());
-    actions.appendChild(presentBtn);
-
-    const shareBtn = el('button', {
-        type: 'button',
-        class: 'pl-row-btn',
-        title: 'Share link',
-        'aria-label': 'Share playlist link',
-        html: ICONS.share,
-    });
-    let shareTimer = null;
-    shareBtn.addEventListener('click', async e => {
-        e.preventDefault();
-        e.stopPropagation();
-        const url = shareUrlForPlaylist(pl);
-        const flash = (cls) => {
-            shareBtn.classList.add(cls);
-            if (shareTimer) clearTimeout(shareTimer);
-            shareTimer = setTimeout(() => {
-                shareBtn.classList.remove('copied', 'failed');
-                shareTimer = null;
-            }, 1500);
-        };
-        const result = await shareUrl({ url, title: pl.name || 'Playlist' });
-        if (result === 'shared' || result === 'aborted') return;
-        flash(result === 'copied' ? 'copied' : 'failed');
-    });
-    actions.appendChild(shareBtn);
-
-    const trash = el('button', {
-        type: 'button',
-        class: 'pl-row-btn pl-row-trash',
-        title: 'Delete playlist',
-        'aria-label': 'Delete playlist',
-        html: ICONS.trash,
-    });
-    const trashLabel = el('span', { class: 'pl-row-trash-label' });
-    trash.appendChild(trashLabel);
-    wireConfirmButton(trash, {
-        stopEvents: true,
-        onArm: () => { trashLabel.textContent = 'Tap again'; },
-        onDisarm: () => { trashLabel.textContent = ''; },
-        onConfirm: () => {
-            deletePlaylist(pl.id);
-            App.render();
-        },
-    });
-    actions.appendChild(trash);
-
-    row.appendChild(link);
-    row.appendChild(actions);
-    return row;
-}
-
-function relativeTime(iso) {
-    if (!iso) return '';
-    const then = new Date(iso).getTime();
-    if (!Number.isFinite(then)) return '';
-    const delta = Math.max(0, Date.now() - then);
-    const min = 60 * 1000, hr = 60 * min, day = 24 * hr;
-    if (delta < min) return 'just now';
-    if (delta < hr)  return Math.floor(delta / min) + ' min ago';
-    if (delta < day) return Math.floor(delta / hr)  + ' h ago';
-    if (delta < 7 * day) return Math.floor(delta / day) + ' d ago';
-    return new Date(iso).toLocaleDateString();
-}
 
 // ---------- Playlists: editor view ----------
 
@@ -1322,65 +1184,6 @@ function showNameCollisionDialog(draft, existing) {
         location.hash = '#/playlists/' + pl.id;
     });
     cancelBtn.addEventListener('click', () => handle.close());
-}
-
-function promptImportFromUrl() {
-    const error = el('p', { class: 'pl-import-error', style: 'display: none;' });
-    const textarea = el('textarea', {
-        class: 'pl-import-input',
-        rows: '3',
-        placeholder: 'https://\u2026/#/playlists/shared?\u2026',
-        spellcheck: 'false',
-        'aria-label': 'Playlist link',
-    });
-
-    const importBtn = el('button', { type: 'button', class: 'pl-btn pl-btn-primary' },
-        el('span', { html: ICONS.plus }), el('span', null, 'Import'));
-    const cancelBtn = el('button', { type: 'button', class: 'pl-btn pl-btn-link' }, 'Cancel');
-
-    const body = [
-        el('h2', null, 'Import a playlist'),
-        el('p', { class: 'modal-help' },
-            'Paste a playlist link below. Importing creates a copy in your library; ',
-            'the original isn\u2019t affected.'),
-        textarea,
-        error,
-        el('div', { class: 'pl-collision-actions' }, importBtn, cancelBtn),
-    ];
-    const handle = openModal({
-        body,
-        className: 'pl-import-modal',
-        closeOnEsc: true,
-        initialFocus: textarea,
-    });
-
-    const showErr = (msg) => {
-        error.textContent = msg;
-        error.style.display = '';
-    };
-    const tryImport = () => {
-        const raw = (textarea.value || '').trim();
-        if (!raw) { showErr('Paste a playlist link first.'); return; }
-        try {
-            const u = new URL(raw, location.href);
-            const hash = u.hash || '';
-            const m = hash.match(/^#\/?playlists\/shared\??(.*)$/);
-            if (!m) { showErr('That doesn\u2019t look like a playlist link.'); return; }
-            handle.close();
-            location.hash = '#/playlists/shared?' + m[1];
-        } catch {
-            showErr('Could not read that URL.');
-        }
-    };
-
-    importBtn.addEventListener('click', tryImport);
-    cancelBtn.addEventListener('click', () => handle.close());
-    textarea.addEventListener('keydown', e => {
-        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-            e.preventDefault();
-            tryImport();
-        }
-    });
 }
 
 // ---------- Boot ----------

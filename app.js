@@ -9,6 +9,7 @@ import { settingUrl, settingDesignator, firstLineOfSetting, stripLeadingArticle 
 import { initMobileMenu, initSearchForm, syncSearchInput } from './js/ui/chrome.js';
 import { initTheme } from './js/ui/theme.js';
 import { registerServiceWorker } from './js/ui/serviceWorker.js';
+import { openModal } from './js/ui/modal.js';
 
 // ------ App state ------
 
@@ -1016,15 +1017,9 @@ function exitPresent() {
 }
 
 function showPresentTutorial(onClose) {
-    const backdrop = el('div', { class: 'modal-backdrop', role: 'dialog', 'aria-modal': 'true' });
     const dontShow = el('input', { type: 'checkbox', id: 'dont-show-tutorial' });
-    const dismiss = () => {
-        if (dontShow.checked) localStorage.setItem(PRESENT_TUTORIAL_KEY, '1');
-        document.body.removeChild(backdrop);
-        if (typeof onClose === 'function') onClose();
-    };
-    const okBtn = el('button', { type: 'button', onclick: dismiss }, 'Got it');
-    const modal = el('div', { class: 'modal' },
+    const okBtn = el('button', { type: 'button' }, 'Got it');
+    const body = [
         el('h2', null, 'Presentation mode'),
         el('p', null, 'The stanza fills the screen for projection.'),
         el('p', null,
@@ -1040,11 +1035,16 @@ function showPresentTutorial(onClose) {
             el('label', { for: 'dont-show-tutorial' }, dontShow, ' Don\u2019t show this again'),
             okBtn,
         ),
-    );
-    backdrop.appendChild(modal);
-    backdrop.addEventListener('click', e => { if (e.target === backdrop) dismiss(); });
-    document.body.appendChild(backdrop);
-    okBtn.focus();
+    ];
+    const handle = openModal({
+        body,
+        initialFocus: okBtn,
+        onClose: () => {
+            if (dontShow.checked) localStorage.setItem(PRESENT_TUTORIAL_KEY, '1');
+            if (typeof onClose === 'function') onClose();
+        },
+    });
+    okBtn.addEventListener('click', () => handle.close());
 }
 
 // ---------- Playlists: store ----------
@@ -2281,8 +2281,18 @@ function importSharedPlaylist(draft) {
 }
 
 function showNameCollisionDialog(draft, existing) {
-    const backdrop = el('div', { class: 'modal-backdrop', role: 'dialog', 'aria-modal': 'true' });
-    const replace = () => {
+    const replaceBtn = el('button', { type: 'button', class: 'pl-btn pl-btn-danger' }, 'Replace existing');
+    const copyBtn = el('button', { type: 'button', class: 'pl-btn pl-btn-primary' }, 'Import as a copy');
+    const cancelBtn = el('button', { type: 'button', class: 'pl-btn pl-btn-link' }, 'Cancel');
+    const body = [
+        el('h2', null, 'Playlist exists'),
+        el('p', null,
+            'A playlist named ', el('strong', null, '"' + (draft.name || '') + '"'),
+            ' already exists in your library. What would you like to do?'),
+        el('div', { class: 'pl-collision-actions' }, replaceBtn, copyBtn, cancelBtn),
+    ];
+    const handle = openModal({ body });
+    replaceBtn.addEventListener('click', () => {
         const updated = {
             ...existing,
             mainTitleSlide: draft.mainTitleSlide,
@@ -2290,10 +2300,10 @@ function showNameCollisionDialog(draft, existing) {
             settings: draft.settings,
         };
         upsertPlaylist(updated);
-        document.body.removeChild(backdrop);
+        handle.close();
         location.hash = '#/playlists/' + existing.id;
-    };
-    const copy = () => {
+    });
+    copyBtn.addEventListener('click', () => {
         const names = new Set(loadPlaylists().map(p => p.name || ''));
         let n = 2, candidate;
         do {
@@ -2311,30 +2321,13 @@ function showNameCollisionDialog(draft, existing) {
             settings: draft.settings,
         };
         upsertPlaylist(pl);
-        document.body.removeChild(backdrop);
+        handle.close();
         location.hash = '#/playlists/' + pl.id;
-    };
-    const cancel = () => document.body.removeChild(backdrop);
-    const modal = el('div', { class: 'modal' },
-        el('h2', null, 'Playlist exists'),
-        el('p', null,
-            'A playlist named ', el('strong', null, '"' + (draft.name || '') + '"'),
-            ' already exists in your library. What would you like to do?'),
-        el('div', { class: 'pl-collision-actions' },
-            el('button', { type: 'button', class: 'pl-btn pl-btn-danger', onclick: replace }, 'Replace existing'),
-            el('button', { type: 'button', class: 'pl-btn pl-btn-primary', onclick: copy }, 'Import as a copy'),
-            el('button', { type: 'button', class: 'pl-btn pl-btn-link', onclick: cancel }, 'Cancel'),
-        ),
-    );
-    backdrop.appendChild(modal);
-    backdrop.addEventListener('click', e => { if (e.target === backdrop) cancel(); });
-    document.body.appendChild(backdrop);
+    });
+    cancelBtn.addEventListener('click', () => handle.close());
 }
 
 function promptImportFromUrl() {
-    const backdrop = el('div', { class: 'modal-backdrop', role: 'dialog', 'aria-modal': 'true' });
-    const close = () => { if (backdrop.parentNode) backdrop.parentNode.removeChild(backdrop); };
-
     const error = el('p', { class: 'pl-import-error', style: 'display: none;' });
     const textarea = el('textarea', {
         class: 'pl-import-input',
@@ -2348,6 +2341,26 @@ function promptImportFromUrl() {
         el('span', { html: ICONS.plus }), el('span', null, 'Import'));
     const cancelBtn = el('button', { type: 'button', class: 'pl-btn pl-btn-link' }, 'Cancel');
 
+    const body = [
+        el('h2', null, 'Import a playlist'),
+        el('p', { class: 'modal-help' },
+            'Paste a playlist link below. Importing creates a copy in your library; ',
+            'the original isn\u2019t affected.'),
+        textarea,
+        error,
+        el('div', { class: 'pl-collision-actions' }, importBtn, cancelBtn),
+    ];
+    const handle = openModal({
+        body,
+        className: 'pl-import-modal',
+        closeOnEsc: true,
+        initialFocus: textarea,
+    });
+
+    const showErr = (msg) => {
+        error.textContent = msg;
+        error.style.display = '';
+    };
     const tryImport = () => {
         const raw = (textarea.value || '').trim();
         if (!raw) { showErr('Paste a playlist link first.'); return; }
@@ -2356,43 +2369,21 @@ function promptImportFromUrl() {
             const hash = u.hash || '';
             const m = hash.match(/^#\/?playlists\/shared\??(.*)$/);
             if (!m) { showErr('That doesn\u2019t look like a playlist link.'); return; }
-            close();
+            handle.close();
             location.hash = '#/playlists/shared?' + m[1];
         } catch {
             showErr('Could not read that URL.');
         }
     };
-    const showErr = (msg) => {
-        error.textContent = msg;
-        error.style.display = '';
-    };
 
     importBtn.addEventListener('click', tryImport);
-    cancelBtn.addEventListener('click', close);
+    cancelBtn.addEventListener('click', () => handle.close());
     textarea.addEventListener('keydown', e => {
         if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
             tryImport();
-        } else if (e.key === 'Escape') {
-            e.preventDefault();
-            close();
         }
     });
-
-    const modal = el('div', { class: 'modal pl-import-modal' },
-        el('h2', null, 'Import a playlist'),
-        el('p', { class: 'modal-help' },
-            'Paste a playlist link below. Importing creates a copy in your library; ',
-            'the original isn\u2019t affected.'),
-        textarea,
-        error,
-        el('div', { class: 'pl-collision-actions' }, importBtn, cancelBtn),
-    );
-    backdrop.appendChild(modal);
-    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
-    document.body.appendChild(backdrop);
-    // Focus the textarea so the user can paste straight away.
-    setTimeout(() => textarea.focus(), 0);
 }
 
 // ---------- Boot ----------

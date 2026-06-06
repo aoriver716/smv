@@ -328,7 +328,7 @@ const App = {
                 if (location.hash === url) App.render();
                 else location.hash = url;
             },
-        }, 'Present \u26F6');
+        }, el('span', { html: ICONS.present }), el('span', { class: 'present-btn-label' }, 'Present'));
         children.push(el('div', { class: 'stanza-actions' }, presentBtn, shareButton()));
 
         children.push(adjacentPsalmNav(setting.psalm, this.byPsalm));
@@ -392,7 +392,7 @@ const App = {
             type: 'button',
             class: 'present-btn',
             onclick: () => enterPresent(),
-        }, 'Present \u26F6');
+        }, el('span', { html: ICONS.present }), el('span', { class: 'present-btn-label' }, 'Present'));
 
         mount(el('article', { class: 'stanza-view' },
             el('p', { class: 'crumbs' },
@@ -1222,15 +1222,6 @@ function syncSearchInput(route) {
 
 // ---------- Share & psalm-nav helpers ----------
 
-const SHARE_ICON_SVG =
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
-    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
-    'aria-hidden="true">' +
-    '<path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/>' +
-    '<polyline points="16 6 12 2 8 6"/>' +
-    '<line x1="12" y1="2" x2="12" y2="15"/>' +
-    '</svg>';
-
 function shareButton() {
     const label = el('span', { class: 'share-btn-label' }, 'Share');
     const btn = el('button', {
@@ -1238,7 +1229,7 @@ function shareButton() {
         class: 'share-btn',
         title: 'Share a link to this page',
         'aria-label': 'Share',
-        html: SHARE_ICON_SVG,
+        html: ICONS.share,
     });
     btn.appendChild(label);
 
@@ -1575,7 +1566,7 @@ const ICONS = {
     arrowLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
     playlists: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
-    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
+    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
 };
 

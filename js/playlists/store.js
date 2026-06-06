@@ -36,6 +36,7 @@ function newPlaylistId() {
     // ~6 base36 chars of randomness, prefixed for human readability.
     return 'p_' + Math.random().toString(36).slice(2, 8);
 }
+export { newPlaylistId };
 
 export function createBlankPlaylist() {
     const now = new Date().toISOString();

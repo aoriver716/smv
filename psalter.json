@@ -1,6 +1,6 @@
 {
   "$schema": "./psalter.schema.json",
-  "settings": [
+  "renditions": [
     {
       "psalm": 1,
       "meter": "C.M.",

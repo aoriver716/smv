@@ -19,4 +19,4 @@ if (!validate(data)) {
     process.exit(1);
 }
 
-console.log(`OK: ${data.settings.length} settings validated.`);
+console.log(`OK: ${data.renditions.length} renditions validated.`);

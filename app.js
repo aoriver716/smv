@@ -132,7 +132,7 @@ const App = {
 
     preprocess() {
         this.byPsalm = new Map();
-        for (const s of this.data.settings) {
+        for (const s of this.data.renditions) {
             if (!this.byPsalm.has(s.psalm)) this.byPsalm.set(s.psalm, []);
             this.byPsalm.get(s.psalm).push(s);
             // Annotate each line with its effective verse number.
@@ -411,7 +411,7 @@ const App = {
 
         // Group settings by meter, excluding C.M.
         const byMeter = new Map();
-        for (const s of this.data.settings) {
+        for (const s of this.data.renditions) {
             const m = (s.meter || '').trim();
             if (!m || m === 'C.M.') continue;
             if (!byMeter.has(m)) byMeter.set(m, []);
@@ -448,7 +448,7 @@ const App = {
         document.title = 'First lines — Scottish Metrical Psalter';
 
         const entries = [];
-        for (const s of this.data.settings) {
+        for (const s of this.data.renditions) {
             const firstLine = firstLineOfSetting(s);
             if (!firstLine) continue;
             entries.push({
@@ -499,7 +499,7 @@ const App = {
         const wordRe = /[A-Za-z][A-Za-z'\u2019]*/g;
         const map = new Map(); // word -> [{setting, stanzaIdx, lineIdx, position, original}]
 
-        for (const s of this.data.settings) {
+        for (const s of this.data.renditions) {
             for (let si = 0; si < s.stanzas.length; si++) {
                 const stanza = s.stanzas[si];
                 for (let li = 0; li < stanza.length; li++) {
@@ -617,7 +617,7 @@ const App = {
 
         const re = new RegExp(escapeRe(qRaw), 'i');
         const results = [];
-        for (const s of this.data.settings) {
+        for (const s of this.data.renditions) {
             for (let si = 0; si < s.stanzas.length; si++) {
                 const stanza = s.stanzas[si];
                 for (const line of stanza) {
@@ -1048,7 +1048,7 @@ function liveSearchResults(q, limit) {
     if (!App.data || !q) return [];
     const re = new RegExp(escapeRe(q), 'i');
     const out = [];
-    for (const s of App.data.settings) {
+    for (const s of App.data.renditions) {
         for (let si = 0; si < s.stanzas.length; si++) {
             const stanza = s.stanzas[si];
             for (const line of stanza) {

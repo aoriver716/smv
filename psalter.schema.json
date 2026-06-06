@@ -2,20 +2,20 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aoriver716.github.io/smv/psalter.schema.json",
   "title": "Scottish Metrical Psalter",
-  "description": "The 1650 Scottish Metrical Psalter as a list of renderable settings.",
+  "description": "The 1650 Scottish Metrical Psalter as a list of metrical renditions.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["settings"],
+  "required": ["renditions"],
   "properties": {
     "$schema": { "type": "string" },
-    "settings": {
+    "renditions": {
       "type": "array",
       "minItems": 1,
-      "items": { "$ref": "#/$defs/setting" }
+      "items": { "$ref": "#/$defs/rendition" }
     }
   },
   "$defs": {
-    "setting": {
+    "rendition": {
       "type": "object",
       "additionalProperties": false,
       "required": ["psalm", "meter", "stanzas"],

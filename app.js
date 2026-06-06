@@ -1,104 +1,11 @@
 // Scottish Metrical Psalter — single-page client.
 // All views are rendered from psalter.json on demand. No build step.
 
-const BOOKS = [
-    { title: 'Book I',   first: 1,   last: 41  },
-    { title: 'Book II',  first: 42,  last: 72  },
-    { title: 'Book III', first: 73,  last: 89  },
-    { title: 'Book IV',  first: 90,  last: 106 },
-    { title: 'Book V',   first: 107, last: 150 },
-];
-
-const ALPHA = 'abcdefghijklmnopqrstuvwxyz'.split('');
-
-// Words excluded from the concordance because they appear so often
-// that they swamp meaningful entries. Currently: articles, basic
-// conjunctions, prepositions, and auxiliary verbs (modern + archaic).
-const STOPWORDS = new Set([
-    // Articles
-    'a', 'an', 'the',
-    // Coordinating conjunctions
-    'and', 'but', 'or', 'nor', 'so', 'yet', 'for',
-    // Prepositions
-    'of', 'in', 'on', 'at', 'to', 'from', 'by', 'with', 'as',
-    'into', 'unto', 'upon', 'against', 'before', 'after', 'through',
-    'throughout', 'between', 'among', 'about', 'without', 'within',
-    // Copula / auxiliaries (modern)
-    'is', 'are', 'was', 'were', 'be', 'been', 'being', 'am',
-    'have', 'has', 'had', 'having',
-    'do', 'does', 'did',
-    'will', 'would', 'shall', 'should', 'may', 'might',
-    'can', 'could', 'must',
-    // Copula / auxiliaries (archaic)
-    'hath', 'hast',
-    'doth', 'dost',
-    'wilt', 'wert', 'art',
-    // Demonstratives / determiners
-    'that', 'this', 'these', 'those',
-    // Relative / interrogative
-    'which', 'who', 'whom', 'whose', 'what',
-    'when', 'where', 'why', 'how',
-    // Subordinating conjunctions / adverbs
-    'if', 'then', 'than', 'because', 'though', 'although',
-    'while', 'until', 'since', 'whether',
-]);
-
-// ------ DOM helpers ------
-
-function el(tag, attrs, ...children) {
-    const node = document.createElement(tag);
-    if (attrs) {
-        for (const [k, v] of Object.entries(attrs)) {
-            if (v == null || v === false) continue;
-            if (k === 'class') node.className = v;
-            else if (k === 'html') node.innerHTML = v;
-            else if (k.startsWith('on') && typeof v === 'function') node.addEventListener(k.slice(2), v);
-            else node.setAttribute(k, v);
-        }
-    }
-    for (const c of children.flat()) {
-        if (c == null || c === false) continue;
-        node.appendChild(typeof c === 'string' || typeof c === 'number'
-            ? document.createTextNode(String(c))
-            : c);
-    }
-    return node;
-}
-
-function mount(...nodes) {
-    const app = document.getElementById('app');
-    app.replaceChildren(...nodes);
-    window.scrollTo(0, 0);
-}
-
-// ------ Routing ------
-
-function parseRoute() {
-    const raw = (location.hash || '').replace(/^#\/?/, '');
-    const [path, query] = raw.split('?');
-    const tokens = path.split('/').filter(Boolean);
-    const params = new URLSearchParams(query || '');
-    return { tokens, params };
-}
-
-function parseVerses(spec) {
-    if (!spec) return null;
-    const out = new Set();
-    for (const chunk of spec.split(',')) {
-        const m = chunk.match(/^(\d+)(?:-(\d+))?$/);
-        if (!m) continue;
-        const a = parseInt(m[1], 10);
-        const b = m[2] ? parseInt(m[2], 10) : a;
-        for (let i = Math.min(a, b); i <= Math.max(a, b); i++) out.add(i);
-    }
-    return out.size ? out : null;
-}
-
-function ordinalSuffix(n) {
-    const s = ['th', 'st', 'nd', 'rd'];
-    const v = n % 100;
-    return n + (s[(v - 20) % 10] || s[v] || s[0]);
-}
+import { BOOKS, ALPHA, STOPWORDS } from './js/constants.js';
+import { el, mount } from './js/dom.js';
+import { parseRoute, parseVerses, ordinalSuffix } from './js/router.js';
+import { ICONS, SUN_SVG, MOON_SVG } from './js/icons.js';
+import { settingUrl, settingDesignator, firstLineOfSetting, stripLeadingArticle } from './js/psalm/labels.js';
 
 // ------ App state ------
 
@@ -800,27 +707,6 @@ const App = {
 
 // ---------- URL & label helpers ----------
 
-function settingUrl(setting, stanzaNum, params) {
-    let url = `#/psalm/${setting.psalm}`;
-    if (setting.part)    url += `/p${setting.part}`;
-    if (setting.version) url += `/v${setting.version}`;
-    if (stanzaNum != null) url += `/s${stanzaNum}`;
-    const qs = params && params.toString();
-    if (qs) url += '?' + qs;
-    return url;
-}
-
-function settingDesignator(setting) {
-    const parts = [];
-    if (setting.part) {
-        parts.push(setting.heading ? `Part ${setting.part}: ${setting.heading}` : `Part ${setting.part}`);
-    }
-    if (setting.version) {
-        parts.push(`Version ${setting.version}`);
-    }
-    return parts.join(' \u00b7 ');
-}
-
 // Compact citation used by the concordance and first-lines index, e.g.
 //   "Psalm 23"
 //   "Psalm 6 (1st)"
@@ -836,19 +722,6 @@ function citation(setting) {
     return suffix ? `Psalm ${setting.psalm} ${suffix}` : `Psalm ${setting.psalm}`;
 }
 
-function firstLineOfSetting(s) {
-    for (const stanza of s.stanzas) {
-        for (const line of stanza) {
-            const t = String(line.text || '').replace(/^\t+/, '').trim();
-            if (t) return t;
-        }
-    }
-    return '';
-}
-
-function stripLeadingArticle(s) {
-    return s.replace(/^(?:the|a|an|o|oh)\s+/i, '');
-}
 
 // ---------- Stanza line rendering ----------
 
@@ -1301,9 +1174,6 @@ function adjacentPsalmNav(currentPsalm, byPsalm) {
 
 const THEME_KEY = 'smv.theme';
 
-const SUN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
-const MOON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-
 function applyTheme(value) {
     const root = document.documentElement;
     if (value === 'light' || value === 'dark') {
@@ -1552,23 +1422,6 @@ function showPresentTutorial(onClose) {
     document.body.appendChild(backdrop);
     okBtn.focus();
 }
-
-// ---------- Playlists: icons ----------
-
-const ICONS = {
-    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
-    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>',
-    drag: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>',
-    edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
-    present: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="1"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
-    arrowUp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>',
-    arrowDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>',
-    arrowLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
-    playlists: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
-    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
-    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>',
-    close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
-};
 
 // ---------- Playlists: store ----------
 

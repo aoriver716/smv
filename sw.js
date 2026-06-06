@@ -4,7 +4,7 @@
 // real bugs (e.g. an old app.js that doesn't know about a new route renders
 // "Not found"). Bump VERSION whenever the precache list changes.
 
-const VERSION = 'smv-v27';
+const VERSION = 'smv-v28';
 const ASSETS = [
     './',
     './index.html',
@@ -13,6 +13,11 @@ const ASSETS = [
     './psalter.json',
     './manifest.webmanifest',
     './icon.svg',
+    './js/constants.js',
+    './js/dom.js',
+    './js/router.js',
+    './js/icons.js',
+    './js/psalm/labels.js',
 ];
 
 self.addEventListener('install', event => {

@@ -1291,6 +1291,8 @@ mark {
     border-color: #b34141;
 }
 .pl-btn.copied { color: var(--accent); border-color: var(--accent); }
+.pl-row-btn.copied { color: var(--accent); border-color: var(--accent); }
+.pl-row-btn.failed { color: #b34141; border-color: #b34141; }
 
 .pl-empty {
     border: 1px dashed var(--rule);
@@ -1358,6 +1360,36 @@ mark {
 .pl-row-trash-label {
     font-size: 0.8rem;
     font-family: var(--sans);
+}
+
+.pl-row-actions {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding-right: 0.4rem;
+}
+
+.pl-row-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 0.45rem;
+    color: var(--muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    text-decoration: none;
+}
+.pl-row-btn svg { width: 1.1rem; height: 1.1rem; }
+.pl-row-btn:hover,
+.pl-row-btn:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+    outline: none;
+    text-decoration: none;
 }
 
 /* Editor */
@@ -1704,6 +1736,32 @@ mark {
     flex-wrap: wrap;
     margin-top: 1rem;
     justify-content: flex-end;
+}
+
+.pl-import-modal { max-width: 32rem; }
+.pl-import-input {
+    width: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.55rem 0.65rem;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    resize: vertical;
+    box-sizing: border-box;
+    margin-top: 0.25rem;
+}
+.pl-import-input:focus { outline: none; border-color: var(--accent); }
+.pl-import-error {
+    color: #b34141;
+    font-size: 0.85rem;
+    margin: 0.5rem 0 0;
+}
+.modal-help {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0 0 0.6rem;
 }
 
 /* Present-mode title slides */

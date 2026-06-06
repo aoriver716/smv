@@ -2,7 +2,8 @@ import { el, mount } from '../dom.js';
 import { parseVerses } from '../router.js';
 import { ICONS } from '../icons.js';
 import { settingUrl, settingDesignator } from '../psalm/labels.js';
-import { shareButton, enterPresent, requestPresentOnNextRender, consumePresentRequest } from '../../app.js';
+import { shareButton } from '../../app.js';
+import { enterPresent, requestPresentOnNextRender, consumePresentRequest } from '../present/mode.js';
 import { renderNotFoundView } from './notFound.js';
 
 export function stanzaLineNode(line, isZoom) {

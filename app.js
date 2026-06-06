@@ -11,6 +11,7 @@ import { initTheme } from './js/ui/theme.js';
 import { registerServiceWorker } from './js/ui/serviceWorker.js';
 import { openModal } from './js/ui/modal.js';
 import { shareUrl } from './js/ui/share.js';
+import { wireConfirmButton } from './js/ui/confirmButton.js';
 
 // ------ App state ------
 
@@ -1385,8 +1386,6 @@ function playlistIndexRow(pl) {
     });
     actions.appendChild(shareBtn);
 
-    let confirming = false;
-    let confirmTimer = null;
     const trash = el('button', {
         type: 'button',
         class: 'pl-row-btn pl-row-trash',
@@ -1396,23 +1395,14 @@ function playlistIndexRow(pl) {
     });
     const trashLabel = el('span', { class: 'pl-row-trash-label' });
     trash.appendChild(trashLabel);
-    trash.addEventListener('click', e => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!confirming) {
-            confirming = true;
-            trash.classList.add('confirming');
-            trashLabel.textContent = 'Tap again';
-            confirmTimer = setTimeout(() => {
-                confirming = false;
-                trash.classList.remove('confirming');
-                trashLabel.textContent = '';
-            }, 2000);
-            return;
-        }
-        if (confirmTimer) clearTimeout(confirmTimer);
-        deletePlaylist(pl.id);
-        App.render();
+    wireConfirmButton(trash, {
+        stopEvents: true,
+        onArm: () => { trashLabel.textContent = 'Tap again'; },
+        onDisarm: () => { trashLabel.textContent = ''; },
+        onConfirm: () => {
+            deletePlaylist(pl.id);
+            App.render();
+        },
     });
     actions.appendChild(trash);
 
@@ -1478,8 +1468,6 @@ function mountPlaylistEditor(pl, draft) {
         location.hash = '#/playlists';
     });
 
-    let deleteConfirming = false;
-    let deleteTimer = null;
     const deleteBtn = el('button', {
         type: 'button',
         class: 'pl-btn pl-btn-danger',
@@ -1487,25 +1475,17 @@ function mountPlaylistEditor(pl, draft) {
         'aria-label': 'Delete playlist',
         html: ICONS.trash,
     });
-    deleteBtn.appendChild(el('span', { class: 'pl-btn-label' }, 'Delete'));
-    deleteBtn.addEventListener('click', () => {
-        if (!deleteConfirming) {
-            deleteConfirming = true;
-            deleteBtn.classList.add('confirming');
-            const label = deleteBtn.querySelector('.pl-btn-label');
-            if (label) label.textContent = 'Tap again';
-            deleteTimer = setTimeout(() => {
-                deleteConfirming = false;
-                deleteBtn.classList.remove('confirming');
-                if (label) label.textContent = 'Delete';
-            }, 2000);
-            return;
-        }
-        if (deleteTimer) clearTimeout(deleteTimer);
-        // Drafts that were never saved have nothing to delete from storage.
-        if (!(draft && draft.isNew)) deletePlaylist(pl.id);
-        clearEditorDraft();
-        location.hash = '#/playlists';
+    const deleteLabel = el('span', { class: 'pl-btn-label' }, 'Delete');
+    deleteBtn.appendChild(deleteLabel);
+    wireConfirmButton(deleteBtn, {
+        onArm: () => { deleteLabel.textContent = 'Tap again'; },
+        onDisarm: () => { deleteLabel.textContent = 'Delete'; },
+        onConfirm: () => {
+            // Drafts that were never saved have nothing to delete from storage.
+            if (!(draft && draft.isNew)) deletePlaylist(pl.id);
+            clearEditorDraft();
+            location.hash = '#/playlists';
+        },
     });
 
     const mainTitleToggle = el('label', { class: 'pl-toggle' },
@@ -1589,8 +1569,6 @@ function playlistSettingRow(pl, setting, idx) {
         html: ICONS.edit,
     });
 
-    let confirming = false;
-    let confirmTimer = null;
     const delBtn = el('button', {
         type: 'button',
         class: 'pl-set-mini pl-set-trash',
@@ -1598,19 +1576,11 @@ function playlistSettingRow(pl, setting, idx) {
         'aria-label': 'Remove setting',
         html: ICONS.trash,
     });
-    delBtn.addEventListener('click', () => {
-        if (!confirming) {
-            confirming = true;
-            delBtn.classList.add('confirming');
-            confirmTimer = setTimeout(() => {
-                confirming = false;
-                delBtn.classList.remove('confirming');
-            }, 2000);
-            return;
-        }
-        if (confirmTimer) clearTimeout(confirmTimer);
-        pl.settings.splice(idx, 1);
-        App.render();
+    wireConfirmButton(delBtn, {
+        onConfirm: () => {
+            pl.settings.splice(idx, 1);
+            App.render();
+        },
     });
 
     const row = el('li', {

@@ -4,15 +4,46 @@
 // real bugs (e.g. an old app.js that doesn't know about a new route renders
 // "Not found"). Bump VERSION whenever the precache list changes.
 
-const VERSION = 'smv-v27';
+const VERSION = 'smv-v39';
 const ASSETS = [
     './',
     './index.html',
-    './app.js',
+    './js/main.js',
     './style.css',
     './psalter.json',
     './manifest.webmanifest',
     './icon.svg',
+    './js/constants.js',
+    './js/dom.js',
+    './js/router.js',
+    './js/icons.js',
+    './js/psalm/labels.js',
+    './js/ui/chrome.js',
+    './js/ui/theme.js',
+    './js/ui/serviceWorker.js',
+    './js/ui/modal.js',
+    './js/ui/share.js',
+    './js/ui/confirmButton.js',
+    './js/views/notFound.js',
+    './js/views/home.js',
+    './js/views/meters.js',
+    './js/views/firstLines.js',
+    './js/views/concordance.js',
+    './js/views/search.js',
+    './js/views/setting.js',
+    './js/present/tutorial.js',
+    './js/present/mode.js',
+    './js/playlists/store.js',
+    './js/playlists/draft.js',
+    './js/playlists/verses.js',
+    './js/playlists/urlCodec.js',
+    './js/playlists/units.js',
+    './js/playlists/renditions.js',
+    './js/playlists/shared.js',
+    './js/playlists/index.js',
+    './js/playlists/editor.js',
+    './js/playlists/picker.js',
+    './js/playlists/present.js',
 ];
 
 self.addEventListener('install', event => {

@@ -703,6 +703,7 @@ body.presenting .stanza-view {
 body.presenting .stanza-view > :not(.stanza-body-wrap) { display: none; }
 
 body.presenting .stanza-body {
+    font-family: var(--serif);
     font-size: calc(clamp(2rem, 6vw, 5rem) * var(--present-font-scale, 1));
     line-height: 1.4;
     padding-left: 0;
@@ -1816,23 +1817,6 @@ mark {
     right: 1.5rem;
     font-size: 0.85rem;
     color: var(--muted);
-}
-
-/* Present-mode chip (position indicator in topbar area) */
-.pl-present-chip {
-    position: fixed;
-    top: 0.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: transparent;
-    color: var(--muted);
-    font-family: var(--sans);
-    font-size: 0.8rem;
-    padding: 0.2rem 0.6rem;
-    border-radius: 999px;
-    z-index: 52;
-    opacity: 0.4;
-    pointer-events: none;
 }
 
 body.presenting .pl-present-slide {

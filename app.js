@@ -2658,16 +2658,13 @@ function renderPlaylistSlide(pl, queue, k) {
     }, '\u2191 Back to playlist');
 
     let body;
-    let chipText = '';
     if (slide.kind === 'mainTitle') {
         body = renderMainTitleSlideBody(pl);
-        chipText = '';
         document.title = (pl.name || 'Playlist') + ' \u2014 Scottish Metrical Psalter';
     } else if (slide.kind === 'settingTitle') {
         const s = pl.settings[slide.settingIdx];
         const r = findRendition(s.psalm, s.version, s.part);
         body = renderSettingTitleSlideBody(s, r);
-        chipText = `Setting ${slide.settingIdx + 1} / ${pl.settings.length}`;
         document.title = `Psalm ${s.psalm} \u2014 ${pl.name || 'Playlist'}`;
     } else {
         // Stanza slide. Render same structure as existing stanza-body so all
@@ -2679,28 +2676,12 @@ function renderPlaylistSlide(pl, queue, k) {
             ? stanza.filter(line => line._verse != null && slide.verseSet.has(line._verse))
             : stanza;
         const lineNodes = visibleLines.map(line => stanzaLineNode(line, true));
-        // Compute "stanza N of M" relative to visible stanzas of this setting.
-        const visibleStanzaIdxs = [];
-        for (let i = 0; i < r.stanzas.length; i++) {
-            const st = r.stanzas[i];
-            const vis = slide.verseSet
-                ? st.some(line => line._verse != null && slide.verseSet.has(line._verse))
-                : st.length > 0;
-            if (vis) visibleStanzaIdxs.push(i);
-        }
-        const stanzaPos = visibleStanzaIdxs.indexOf(slide.stanzaIdx) + 1;
         body = el('div', { class: 'stanza-body-wrap' },
             el('div', { class: 'stanza-body' }, ...lineNodes));
-        chipText = `Setting ${slide.settingIdx + 1} / ${pl.settings.length} \u00b7 Stanza ${stanzaPos} / ${visibleStanzaIdxs.length}`;
-        document.title = `Psalm ${s.psalm} stanza ${stanzaPos} \u2014 ${pl.name || 'Playlist'}`;
+        document.title = `Psalm ${s.psalm} \u2014 ${pl.name || 'Playlist'}`;
     }
 
-    const chip = chipText
-        ? el('div', { class: 'pl-present-chip' }, chipText)
-        : null;
-
     mount(el('article', { class: 'pl-present-slide pl-present-' + slide.kind },
-        chip,
         body,
         el('nav', { class: 'stanza-nav' }, prevLink, nextLink),
         back,

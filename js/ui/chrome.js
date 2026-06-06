@@ -3,7 +3,8 @@
 
 import { el } from '../dom.js';
 import { settingUrl } from '../psalm/labels.js';
-import { App, citation, escapeRe, highlightMatches } from '../../app.js';
+import { App, citation } from '../../app.js';
+import { escapeRe, highlightMatches } from '../views/search.js';
 
 export function initMobileMenu() {
     const toggle   = document.getElementById('menu-toggle');

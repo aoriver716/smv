@@ -1,7 +1,7 @@
 import { el, mount } from '../dom.js';
 import { ICONS } from '../icons.js';
 import { wireConfirmButton } from '../ui/confirmButton.js';
-import { App } from '../../app.js';
+import { App } from '../main.js';
 import { upsertPlaylist, deletePlaylist, getPlaylist } from './store.js';
 import { setEditorDraft, getEditorDraft, clearEditorDraft } from './draft.js';
 import { settingSummary } from './renditions.js';

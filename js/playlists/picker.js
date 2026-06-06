@@ -1,6 +1,6 @@
 import { el, mount } from '../dom.js';
 import { ICONS } from '../icons.js';
-import { App } from '../../app.js';
+import { App } from '../main.js';
 import { firstLineOfSetting, settingDesignator } from '../psalm/labels.js';
 import { stanzaLineNode } from '../views/setting.js';
 import {

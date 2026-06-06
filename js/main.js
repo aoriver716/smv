@@ -1,26 +1,26 @@
 // Scottish Metrical Psalter — single-page client.
 // All views are rendered from psalter.json on demand. No build step.
 
-import { el, mount } from './js/dom.js';
-import { parseRoute, ordinalSuffix } from './js/router.js';
-import { ICONS } from './js/icons.js';
-import { initMobileMenu, initSearchForm, syncSearchInput } from './js/ui/chrome.js';
-import { initTheme } from './js/ui/theme.js';
-import { registerServiceWorker } from './js/ui/serviceWorker.js';
-import { shareUrl } from './js/ui/share.js';
-import { exitPresent } from './js/present/mode.js';
-import { clearEditorDraft } from './js/playlists/draft.js';
-import { renderPlaylistsIndexView } from './js/playlists/index.js';
-import { renderPlaylistEditorView } from './js/playlists/editor.js';
-import { renderPlaylistPresentView } from './js/playlists/present.js';
-import { renderSharedPlaylistView } from './js/playlists/shared.js';
-import { renderHomeView } from './js/views/home.js';
-import { renderMetersView } from './js/views/meters.js';
-import { renderFirstLinesView } from './js/views/firstLines.js';
-import { renderNotFoundView } from './js/views/notFound.js';
-import { renderConcordanceView } from './js/views/concordance.js';
-import { renderSearchView } from './js/views/search.js';
-import { renderPsalmRouteView } from './js/views/setting.js';
+import { el, mount } from './dom.js';
+import { parseRoute, ordinalSuffix } from './router.js';
+import { ICONS } from './icons.js';
+import { initMobileMenu, initSearchForm, syncSearchInput } from './ui/chrome.js';
+import { initTheme } from './ui/theme.js';
+import { registerServiceWorker } from './ui/serviceWorker.js';
+import { shareUrl } from './ui/share.js';
+import { exitPresent } from './present/mode.js';
+import { clearEditorDraft } from './playlists/draft.js';
+import { renderPlaylistsIndexView } from './playlists/index.js';
+import { renderPlaylistEditorView } from './playlists/editor.js';
+import { renderPlaylistPresentView } from './playlists/present.js';
+import { renderSharedPlaylistView } from './playlists/shared.js';
+import { renderHomeView } from './views/home.js';
+import { renderMetersView } from './views/meters.js';
+import { renderFirstLinesView } from './views/firstLines.js';
+import { renderNotFoundView } from './views/notFound.js';
+import { renderConcordanceView } from './views/concordance.js';
+import { renderSearchView } from './views/search.js';
+import { renderPsalmRouteView } from './views/setting.js';
 
 // ------ App state ------
 

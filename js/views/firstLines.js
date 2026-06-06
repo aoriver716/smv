@@ -1,6 +1,6 @@
 import { el, mount } from '../dom.js';
 import { settingUrl, firstLineOfSetting, stripLeadingArticle } from '../psalm/labels.js';
-import { citation } from '../../app.js';
+import { citation } from '../main.js';
 
 export function renderFirstLinesView(app) {
     document.title = 'First lines \u2014 Scottish Metrical Psalter';

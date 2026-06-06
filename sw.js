@@ -4,11 +4,11 @@
 // real bugs (e.g. an old app.js that doesn't know about a new route renders
 // "Not found"). Bump VERSION whenever the precache list changes.
 
-const VERSION = 'smv-v38';
+const VERSION = 'smv-v39';
 const ASSETS = [
     './',
     './index.html',
-    './app.js',
+    './js/main.js',
     './style.css',
     './psalter.json',
     './manifest.webmanifest',

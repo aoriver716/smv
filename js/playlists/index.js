@@ -2,7 +2,7 @@ import { el, mount } from '../dom.js';
 import { ICONS } from '../icons.js';
 import { shareUrl } from '../ui/share.js';
 import { wireConfirmButton } from '../ui/confirmButton.js';
-import { App } from '../../app.js';
+import { App } from '../main.js';
 import {
     loadPlaylists, createBlankPlaylist, deletePlaylist,
 } from './store.js';

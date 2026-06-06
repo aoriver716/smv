@@ -1,6 +1,6 @@
 import { settingDesignator } from '../psalm/labels.js';
 import { formatVerseRanges } from './verses.js';
-import { App } from '../../app.js';
+import { App } from '../main.js';
 
 export function findRendition(psalm, version, part) {
     const sibs = App.byPsalm && App.byPsalm.get(psalm);

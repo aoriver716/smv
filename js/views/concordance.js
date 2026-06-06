@@ -1,7 +1,7 @@
 import { el, mount } from '../dom.js';
 import { ALPHA, STOPWORDS } from '../constants.js';
 import { settingUrl } from '../psalm/labels.js';
-import { citation } from '../../app.js';
+import { citation } from '../main.js';
 import { renderNotFoundView } from './notFound.js';
 
 function escapeHtml(s) {

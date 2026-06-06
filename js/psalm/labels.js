@@ -1,5 +1,5 @@
 // URL builders and label helpers that are pure functions of a setting.
-// `citation()` is kept in app.js for now because it consults App.byPsalm.
+// `citation()` lives in main.js because it consults App.byPsalm.
 
 export function settingUrl(setting, stanzaNum, params) {
     let url = `#/psalm/${setting.psalm}`;

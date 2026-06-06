@@ -1,6 +1,6 @@
 import { el, mount } from '../dom.js';
 import { settingUrl } from '../psalm/labels.js';
-import { citation } from '../../app.js';
+import { citation } from '../main.js';
 
 export function escapeRe(s) {
     return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

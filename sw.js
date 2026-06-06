@@ -1,8 +1,10 @@
 // Service worker for the Scottish Metrical Psalter web app.
-// Strategy: stale-while-revalidate for own-origin GET requests. Bump VERSION on
-// every meaningful asset change so old caches are flushed on activation.
+// Strategy: network-first for own-origin GETs, with cache as offline fallback.
+// We prefer fresh HTML/JS/CSS over instant-stale because stale assets cause
+// real bugs (e.g. an old app.js that doesn't know about a new route renders
+// "Not found"). Bump VERSION whenever the precache list changes.
 
-const VERSION = 'smv-v25';
+const VERSION = 'smv-v26';
 const ASSETS = [
     './',
     './index.html',
@@ -38,13 +40,16 @@ self.addEventListener('fetch', event => {
 
     event.respondWith((async () => {
         const cache = await caches.open(VERSION);
-        const cached = await cache.match(req, { ignoreSearch: false });
-        const network = fetch(req).then(resp => {
-            if (resp && resp.status === 200 && resp.type === 'basic') {
-                cache.put(req, resp.clone());
+        try {
+            const fresh = await fetch(req);
+            if (fresh && fresh.status === 200 && fresh.type === 'basic') {
+                cache.put(req, fresh.clone());
             }
-            return resp;
-        }).catch(() => cached);
-        return cached || network;
+            return fresh;
+        } catch {
+            const cached = await cache.match(req, { ignoreSearch: false });
+            if (cached) return cached;
+            throw new Error('Offline and no cached copy for ' + req.url);
+        }
     })());
 });

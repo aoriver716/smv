@@ -18,8 +18,10 @@ jobs:
 
       - name: Syntax-check JS
         run: |
-          node --check app.js
           node --check sw.js
+          for f in $(find js -name '*.js'); do
+            node --check "$f"
+          done
 
       - name: Parse manifest and psalter.json
         run: |
@@ -35,12 +37,14 @@ jobs:
         shell: pwsh
         run: |
           # If any cached asset changed in this PR but sw.js VERSION did not, warn.
-          $assets = @('index.html','app.js','style.css','psalter.json','manifest.webmanifest','icon.svg')
+          $assets = @('index.html','style.css','psalter.json','manifest.webmanifest','icon.svg')
           $base = if ($env:GITHUB_BASE_REF) { "origin/$env:GITHUB_BASE_REF" } else { 'HEAD~1' }
           try { git fetch --no-tags --depth=2 origin $env:GITHUB_BASE_REF 2>$null } catch {}
           $changed = git diff --name-only "$base"...HEAD 2>$null
           if (-not $changed) { exit 0 }
-          $assetChanged = $changed | Where-Object { $assets -contains $_ }
+          $assetChanged = $changed | Where-Object {
+              ($assets -contains $_) -or ($_ -like 'js/*')
+          }
           $swChanged    = $changed -contains 'sw.js'
           if ($assetChanged -and -not $swChanged) {
             Write-Host "::warning::Cached assets changed but sw.js VERSION was not bumped: $($assetChanged -join ', ')"
